@@ -1,0 +1,27 @@
+---
+import PostLayout from "@/layouts/PostLayout.astro";
+import { getCollection, getEntry } from "astro:content";
+
+export async function getStaticPaths() {
+  const labs = await getCollection("labs", ({ data }) => !data.draft);
+  return labs.map((lab) => ({
+    params: { slug: lab.slug },
+    props: { lab },
+  }));
+}
+
+const { lab } = Astro.props;
+const { Content } = await lab.render();
+---
+
+<PostLayout
+  title={lab.data.title}
+  description={lab.data.description}
+  publishDate={lab.data.publishDate}
+  tags={lab.data.tags}
+  readingTime={lab.data.readingTime}
+  section="labs"
+  slug={lab.slug}
+>
+  <Content />
+</PostLayout>

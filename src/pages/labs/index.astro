@@ -1,0 +1,162 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteNav from "@/components/site/SiteNav.astro";
+import SiteFooter from "@/components/site/SiteFooter.astro";
+import PostCard from "@/components/PostCard.astro";
+import { getCollection } from "astro:content";
+
+const allLabs = await getCollection("labs", ({ data }) => !data.draft);
+const labs = allLabs.sort(
+  (a, b) =>
+    new Date(b.data.publishDate).getTime() -
+    new Date(a.data.publishDate).getTime()
+);
+
+// Collect all unique tags
+const allTags = [...new Set(labs.flatMap((l) => l.data.tags))].sort();
+---
+
+<BaseLayout
+  title="Labs — akashanil.dev"
+  description="Technical walkthroughs — deploying real infrastructure, debugging real problems, and building systems from scratch."
+>
+  <SiteNav />
+
+  <main class="page-main">
+    <div class="page-wrap">
+      <!-- Page header -->
+      <header class="page-header">
+        <span class="page-label">Labs</span>
+        <h1 class="page-title">Technical walkthroughs</h1>
+        <p class="page-desc">
+          Hands-on build logs — deploying real infrastructure, debugging real
+          problems, and building systems from the ground up.
+        </p>
+      </header>
+
+      <!-- Tag filter row -->
+      {
+        allTags.length > 0 && (
+          <div class="tag-filter">
+            <span class="tag-filter__label">Topics:</span>
+            <div class="tag-filter__chips">
+              {allTags.map((tag) => (
+                <a href={`/tags/${tag}`} class="tag-chip">
+                  {tag}
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      <!-- Labs grid -->
+      {
+        labs.length > 0 ? (
+          <div class="labs-grid">
+            {labs.map((lab) => (
+              <PostCard
+                title={lab.data.title}
+                description={lab.data.description}
+                href={`/labs/${lab.slug}`}
+                tags={lab.data.tags}
+                readingTime={lab.data.readingTime}
+                publishDate={lab.data.publishDate}
+                featured={lab.data.featured}
+              />
+            ))}
+          </div>
+        ) : (
+          <p class="empty-state">No labs published yet. Check back soon.</p>
+        )
+      }
+    </div>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .page-main {
+    padding: 4rem 0 5rem;
+  }
+  .page-wrap {
+    max-width: var(--max-w-wide);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  .page-header {
+    margin-bottom: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: var(--max-w);
+  }
+  .page-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent-text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .page-title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .page-desc {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    line-height: 1.65;
+    max-width: 52ch;
+  }
+  .tag-filter {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .tag-filter__label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-subtle);
+    padding-top: 0.2rem;
+    white-space: nowrap;
+  }
+  .tag-filter__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .tag-chip {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-subtle);
+    border: 1px solid var(--border-solid);
+    border-radius: 3px;
+    padding: 0.2em 0.6em;
+    text-transform: lowercase;
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease,
+      background 0.15s ease;
+  }
+  .tag-chip:hover {
+    color: var(--accent-text);
+    border-color: rgba(74, 222, 128, 0.2);
+    background: var(--accent-bg);
+  }
+  .labs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+  .empty-state {
+    font-size: 0.85rem;
+    color: var(--ink-subtle);
+    padding: 3rem 0;
+  }
+</style>

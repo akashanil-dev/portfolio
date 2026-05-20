@@ -1,0 +1,208 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteNav from "@/components/site/SiteNav.astro";
+import SiteFooter from "@/components/site/SiteFooter.astro";
+---
+
+<BaseLayout
+  title="About — akashanil.dev"
+  description="I'm Akash, an MCA student exploring Linux infrastructure, observability, and cloud-native systems."
+>
+  <SiteNav />
+
+  <main class="about-main">
+    <div class="about-wrap">
+      <header class="about-header">
+        <span class="about-label">About</span>
+        <h1 class="about-title">Akash A</h1>
+      </header>
+
+      <div class="about-body">
+        <p>
+          I'm an MCA student exploring Linux infrastructure, observability,
+          cloud-native systems, and how modern software architecture evolved.
+          This site is a public notebook — a place to document what I learn, the
+          systems I build, and the thinking behind them.
+        </p>
+
+        <p>
+          My focus areas right now: Linux internals, container runtimes,
+          observability tooling (Prometheus, Grafana, OpenTelemetry), reverse
+          proxies, and the layers that exist between application code and
+          bare metal.
+        </p>
+
+        <p>
+          I believe in learning by building. Most of what's on this site came
+          from running things locally, hitting something unexpected, and working
+          through it. The labs are the work. The essays are the thinking.
+        </p>
+
+        <hr class="about-divider" />
+
+        <div class="about-links">
+          <h2 class="about-links__heading">Links</h2>
+          <ul class="about-links__list">
+            <li>
+              <a
+                href="https://github.com/akashanil-dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="about-link"
+              >
+                <span class="about-link__label">GitHub</span>
+                <span class="about-link__handle">github.com/akashanil-dev ↗</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="mailto:akashanil084@gmail.com"
+                class="about-link"
+              >
+                <span class="about-link__label">Email</span>
+                <span class="about-link__handle">akashanil084@gmail.com</span>
+              </a>
+            </li>
+            <li>
+              <a href="/rss.xml" class="about-link">
+                <span class="about-link__label">RSS</span>
+                <span class="about-link__handle">akashanil.dev/rss.xml</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <hr class="about-divider" />
+
+        <div class="about-stack">
+          <h2 class="about-links__heading">Site stack</h2>
+          <p class="about-stack__note">
+            Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a>,
+            styled with <a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer">Tailwind CSS</a>,
+            deployed on <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">Vercel</a>.
+            Content in Markdown via Astro Content Collections.
+            Syntax highlighting via Shiki.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .about-main {
+    padding: 4rem 0 6rem;
+  }
+
+  .about-wrap {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .about-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .about-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent-text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .about-title {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+
+  .about-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+    max-width: 62ch;
+  }
+
+  .about-body p {
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+    line-height: 1.8;
+  }
+
+  .about-body a {
+    color: var(--accent-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--accent-dim);
+    transition: color 0.15s ease;
+  }
+  .about-body a:hover {
+    color: var(--accent);
+  }
+
+  .about-divider {
+    border: none;
+    border-top: 1px solid var(--border-solid);
+    margin: 0.5rem 0;
+  }
+
+  .about-links__heading {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+  }
+
+  .about-links__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .about-link {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    transition: none;
+  }
+
+  .about-link__label {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-subtle);
+    min-width: 56px;
+  }
+
+  .about-link__handle {
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    transition: color 0.15s ease;
+  }
+  .about-link:hover .about-link__handle {
+    color: var(--accent-text);
+  }
+
+  .about-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .about-stack__note {
+    font-size: 0.85rem;
+    color: var(--ink-subtle);
+    line-height: 1.7;
+  }
+</style>

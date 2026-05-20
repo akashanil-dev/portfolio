@@ -1,0 +1,102 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteNav from "@/components/site/SiteNav.astro";
+import SiteFooter from "@/components/site/SiteFooter.astro";
+import PostCard from "@/components/PostCard.astro";
+import { getCollection } from "astro:content";
+
+const allEssays = await getCollection("essays", ({ data }) => !data.draft);
+const essays = allEssays.sort(
+  (a, b) =>
+    new Date(b.data.publishDate).getTime() -
+    new Date(a.data.publishDate).getTime()
+);
+---
+
+<BaseLayout
+  title="Essays — akashanil.dev"
+  description="Long-form reasoning about how infrastructure works, why it evolved the way it did, and what it means for how we build software."
+>
+  <SiteNav />
+
+  <main class="page-main">
+    <div class="page-wrap">
+      <header class="page-header">
+        <span class="page-label">Essays</span>
+        <h1 class="page-title">Systems thinking</h1>
+        <p class="page-desc">
+          Long-form reasoning about how infrastructure works, why it evolved the
+          way it did, and what it means for how we build software.
+        </p>
+      </header>
+
+      {
+        essays.length > 0 ? (
+          <div class="essays-list">
+            {essays.map((essay) => (
+              <PostCard
+                title={essay.data.title}
+                description={essay.data.description}
+                href={`/essays/${essay.slug}`}
+                tags={essay.data.tags}
+                readingTime={essay.data.readingTime}
+                publishDate={essay.data.publishDate}
+                variant="editorial"
+              />
+            ))}
+          </div>
+        ) : (
+          <p class="empty-state">No essays published yet. Check back soon.</p>
+        )
+      }
+    </div>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .page-main {
+    padding: 4rem 0 5rem;
+  }
+  .page-wrap {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  .page-header {
+    margin-bottom: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .page-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent-text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .page-title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .page-desc {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    line-height: 1.65;
+    max-width: 52ch;
+  }
+  .essays-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .empty-state {
+    font-size: 0.85rem;
+    color: var(--ink-subtle);
+    padding: 3rem 0;
+  }
+</style>
