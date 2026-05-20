@@ -10,14 +10,15 @@ export async function GET(context: APIContext) {
   ]);
 
   const allPosts = [
-    ...labs.map((p) => ({ ...p, section: "labs" })),
+    ...labs.map((p) => ({
+      ...p, section: "labs" 
     ...essays.map((p) => ({ ...p, section: "essays" })),
-    ...notes.map((p) => ({ ...p, section: "notes" })),
+      ...notes.map((p) => ({ ...p, section: "notes" })),
   ].sort(
-    (a, b) =>
-      new Date(b.data.publishDate).getTime() -
-      new Date(a.data.publishDate).getTime()
-  );
+        (a, b) =>
+          new Date(b.data.publishDate).getTime() -
+          new Date(a.data.publishDate).getTime()
+      );
 
   return rss({
     title: "akashanil.dev",

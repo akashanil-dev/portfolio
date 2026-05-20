@@ -107,11 +107,13 @@ const formattedDate = publishDate
     border-radius: 8px;
     transition:
       border-color 0.2s ease,
-      background 0.2s ease;
+      background 0.2s ease,
+      box-shadow 0.2s ease;
   }
   .card:hover {
-    border-color: rgba(74, 222, 128, 0.25);
+    border-color: rgba(74, 222, 128, 0.28);
     background: var(--bg-overlay);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
   }
   .card--featured {
     border-color: rgba(74, 222, 128, 0.12);
@@ -139,17 +141,20 @@ const formattedDate = publishDate
     transition: color 0.15s ease;
   }
   .card:hover .card__title {
-    color: #fff;
+    color: var(--ink);
   }
 
   .card__desc {
     font-size: 0.82rem;
-    color: var(--ink-muted);
-    line-height: 1.6;
+    color: var(--ink-dim);
+    line-height: 1.65;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+  .card:hover .card__desc {
+    color: var(--ink-muted);
   }
 
   .card__tags {
@@ -180,10 +185,21 @@ const formattedDate = publishDate
   .card-editorial {
     border-bottom: 1px solid var(--border-solid);
     padding: 1.5rem 0;
-    transition: none;
+    border-left: 2px solid transparent;
+    padding-left: 0.75rem;
+    margin-left: -0.75rem;
+    transition:
+      border-color 0.18s ease,
+      background 0.18s ease,
+      padding-left 0.18s ease;
+    border-radius: 0 4px 4px 0;
   }
   .card-editorial:first-child {
     border-top: 1px solid var(--border-solid);
+  }
+  .card-editorial:hover {
+    border-left-color: rgba(74, 222, 128, 0.35);
+    background: rgba(255, 255, 255, 0.025);
   }
 
   .card-editorial__link {
@@ -209,17 +225,20 @@ const formattedDate = publishDate
     transition: color 0.15s ease;
   }
   .card-editorial:hover .card-editorial__title {
-    color: #fff;
+    color: var(--ink);
   }
 
   .card-editorial__desc {
-    font-size: 0.83rem;
-    color: var(--ink-muted);
-    line-height: 1.6;
+    font-size: 0.84rem;
+    color: var(--ink-dim);
+    line-height: 1.65;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+  .card-editorial:hover .card-editorial__desc {
+    color: var(--ink-muted);
   }
 
   .card-editorial__meta {
@@ -234,9 +253,20 @@ const formattedDate = publishDate
   /* ─── Compact Card (notes) ─── */
   .card-compact {
     border-bottom: 1px solid var(--border-solid);
+    border-left: 2px solid transparent;
+    padding-left: 0.75rem;
+    margin-left: -0.75rem;
+    transition:
+      border-color 0.15s ease,
+      background 0.15s ease;
+    border-radius: 0 3px 3px 0;
   }
   .card-compact:first-child {
     border-top: 1px solid var(--border-solid);
+  }
+  .card-compact:hover {
+    border-left-color: rgba(74, 222, 128, 0.28);
+    background: rgba(255, 255, 255, 0.02);
   }
 
   .card-compact__link {
@@ -265,15 +295,18 @@ const formattedDate = publishDate
     text-overflow: ellipsis;
   }
   .card-compact:hover .card-compact__title {
-    color: #fff;
+    color: var(--ink);
   }
 
   .card-compact__desc {
-    font-size: 0.78rem;
-    color: var(--ink-subtle);
+    font-size: 0.79rem;
+    color: var(--ink-dim);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  .card-compact:hover .card-compact__desc {
+    color: var(--ink-muted);
   }
 
   .card-compact__meta {
@@ -301,8 +334,15 @@ const formattedDate = publishDate
   .card-meta-sep {
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    color: var(--ink-subtle);
+    color: var(--ink-dim);
     white-space: nowrap;
+    transition: color 0.15s ease;
+  }
+  .card-editorial:hover .card-meta-date,
+  .card-editorial:hover .card-meta-time,
+  .card-compact:hover .card-meta-date,
+  .card-compact:hover .card-meta-time {
+    color: var(--ink-muted);
   }
 
   @media (max-width: 540px) {

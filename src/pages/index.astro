@@ -50,6 +50,11 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
           /> and the architecture beneath modern software.
         </p>
 
+        <p class="hero-tagline">
+          Labs, essays, and engineering notes from ongoing experiments
+          in infrastructure and observability.
+        </p>
+
         <nav class="hero-actions" aria-label="Quick navigation">
           <a href="/labs" class="hero-btn hero-btn--primary">Labs</a>
           <a href="/essays" class="hero-btn">Essays</a>
@@ -242,7 +247,7 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
   .mono-label {
     font-family: var(--font-mono);
     font-size: 0.75rem;
-    color: var(--ink-subtle);
+    color: var(--ink-dim);
     letter-spacing: 0.03em;
   }
 
@@ -261,8 +266,18 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
     color: var(--ink-muted);
     line-height: 1.7;
     max-width: 52ch;
+    margin-bottom: 0.85rem;
+    font-weight: 300;
+  }
+
+  .hero-tagline {
+    font-size: clamp(0.82rem, 2vw, 0.9rem);
+    color: var(--ink-dim);
+    line-height: 1.75;
+    max-width: 54ch;
     margin-bottom: 2.25rem;
     font-weight: 300;
+    font-style: italic;
   }
 
   .hero-br {
@@ -298,7 +313,7 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
   .hero-btn:hover {
     color: var(--ink);
     background: var(--bg-overlay);
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: var(--border-solid);
   }
   .hero-btn--primary {
     color: var(--accent-text);
@@ -331,7 +346,7 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
   .topic-chip {
     font-family: var(--font-mono);
     font-size: 0.69rem;
-    color: var(--ink-subtle);
+    color: var(--ink-dim);
     border: 1px solid var(--border-solid);
     border-radius: 3px;
     padding: 0.2em 0.6em;
@@ -386,23 +401,23 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
   }
 
   .section-desc {
-    font-size: 0.82rem;
-    color: var(--ink-subtle);
+    font-size: 0.83rem;
+    color: var(--ink-dim);
     max-width: 46ch;
-    line-height: 1.6;
+    line-height: 1.65;
   }
 
   .section-viewall {
     font-family: var(--font-mono);
     font-size: 0.75rem;
-    color: var(--ink-subtle);
+    color: var(--ink-dim);
     white-space: nowrap;
     padding-top: 0.35rem;
     flex-shrink: 0;
     transition: color 0.15s ease;
   }
   .section-viewall:hover {
-    color: var(--accent);
+    color: var(--accent-text);
   }
 
   /* ── Labs grid ── */
@@ -440,18 +455,18 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
   .about-text {
     font-size: 0.925rem;
     color: var(--ink-muted);
-    line-height: 1.75;
+    line-height: 1.8;
   }
 
   .about-link {
     font-family: var(--font-mono);
     font-size: 0.75rem;
-    color: var(--ink-subtle);
+    color: var(--ink-dim);
     transition: color 0.15s ease;
     margin-top: 0.25rem;
   }
   .about-link:hover {
-    color: var(--accent);
+    color: var(--accent-text);
   }
 
   /* Empty state */
