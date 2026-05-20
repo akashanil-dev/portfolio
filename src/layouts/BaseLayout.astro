@@ -56,6 +56,16 @@ const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/favicon.webp" />
 
+    <!-- Theme init: runs synchronously before paint to prevent flash -->
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = stored ?? (prefersDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -76,6 +86,83 @@ const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap"
       />
     </noscript>
+
+    <!-- Mermaid diagram renderer -->
+    <script type="module" is:inline>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+      function initMermaid() {
+        const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          themeVariables: isDark
+            ? {
+                background: '#13161c',
+                primaryColor: '#1e2330',
+                primaryTextColor: '#e2e4e9',
+                primaryBorderColor: '#1e2330',
+                lineColor: '#4ade80',
+                secondaryColor: '#181c24',
+                tertiaryColor: '#0f1115',
+                edgeLabelBackground: '#13161c',
+                clusterBkg: '#181c24',
+                titleColor: '#e2e4e9',
+                nodeTextColor: '#e2e4e9',
+                fontFamily: '"JetBrains Mono", "Fira Code", monospace',
+              }
+            : {
+                background: '#f7f7f5',
+                primaryColor: '#e8e7e3',
+                primaryTextColor: '#111827',
+                primaryBorderColor: '#d6d3cc',
+                lineColor: '#15803d',
+                secondaryColor: '#f0efec',
+                tertiaryColor: '#f7f7f5',
+                edgeLabelBackground: '#f7f7f5',
+                clusterBkg: '#f0efec',
+                titleColor: '#111827',
+                nodeTextColor: '#111827',
+                fontFamily: '"JetBrains Mono", "Fira Code", monospace',
+              },
+        });
+
+        // Astro 5 / Shiki puts data-language on <pre>, not a class on <code>
+        const preBlocks = document.querySelectorAll('pre[data-language="mermaid"]');
+        const diagrams = [];
+
+        for (const pre of preBlocks) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'mermaid-diagram';
+
+          // Shiki wraps each line in <span class="line">; join them with newlines
+          const lineSpans = pre.querySelectorAll('.line');
+          if (lineSpans.length > 0) {
+            wrapper.textContent = Array.from(lineSpans)
+              .map(l => l.textContent)
+              .join('\n');
+          } else {
+            // Fallback: grab raw text from <code>
+            const codeEl = pre.querySelector('code');
+            wrapper.textContent = (codeEl ?? pre).textContent;
+          }
+
+          pre.replaceWith(wrapper);
+          diagrams.push(wrapper);
+        }
+
+        if (diagrams.length > 0) {
+          mermaid.run({ nodes: diagrams });
+        }
+      }
+
+      // Run after DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMermaid);
+      } else {
+        initMermaid();
+      }
+    </script>
   </head>
   <body>
     <slot />
@@ -83,16 +170,20 @@ const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
 </html>
 
 <style is:global>
-  :root {
+  /* ── Dark theme (default) ── */
+  :root,
+  [data-theme="dark"] {
     --bg: #0f1115;
     --bg-elevated: #13161c;
     --bg-overlay: #181c24;
+    --bg-card: #13161c;
     --border: rgba(255, 255, 255, 0.07);
     --border-solid: #1e2330;
 
     --ink: #e2e4e9;
-    --ink-muted: #8892a4;
-    --ink-subtle: #525d72;
+    --ink-muted: #a0abbe;
+    --ink-dim: #7a8aa0;
+    --ink-subtle: #6b7a94;
 
     --accent: #4ade80;
     --accent-muted: #22c55e;
@@ -106,6 +197,41 @@ const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
 
     --max-w: 760px;
     --max-w-wide: 1024px;
+
+    color-scheme: dark;
+  }
+
+  /* ── Light theme — editorial engineering notebook ── */
+  [data-theme="light"] {
+    /* Backgrounds — warm off-white, not pure white */
+    --bg: #f7f7f5;
+    --bg-elevated: #f0efec;
+    --bg-overlay: #e8e7e3;
+    --bg-card: #ececea;
+    --border: rgba(0, 0, 0, 0.06);
+    --border-solid: #d6d3cc;
+
+    /* Ink — graphite hierarchy, strong enough at small sizes */
+    --ink: #111827;
+    --ink-muted: #374151;
+    --ink-dim: #4b5563;
+    --ink-subtle: #6b7280;
+
+    /* Accent — muted forest green, terminal-inspired */
+    --accent: #15803d;
+    --accent-muted: #166534;
+    --accent-dim: #14532d;
+    --accent-text: #166534;
+    --accent-bg: rgba(21, 128, 61, 0.08);
+    --accent-bg-hover: rgba(21, 128, 61, 0.13);
+
+    --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", "IBM Plex Mono", "Fira Code", monospace;
+
+    --max-w: 760px;
+    --max-w-wide: 1024px;
+
+    color-scheme: light;
   }
 
   *,
@@ -119,6 +245,17 @@ const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
   html {
     font-size: 16px;
     scroll-behavior: smooth;
+  }
+
+  /* Smooth theme transition — only on intentional toggle, not on load */
+  html.theme-transitioning,
+  html.theme-transitioning *,
+  html.theme-transitioning *::before,
+  html.theme-transitioning *::after {
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.15s ease !important;
   }
 
   body {
@@ -164,6 +301,117 @@ const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
   * {
     scrollbar-width: thin;
     scrollbar-color: var(--border-solid) var(--bg);
+  }
+
+  /* ── Light mode overrides — fix hardcoded dark-mode values ── */
+
+  /* Code blocks — keep dark in light mode so Shiki tokens stay readable */
+  [data-theme="light"] .prose pre {
+    background: #1a1d23 !important;
+    border-color: #2a2e3a;
+    color: #e2e4e9;
+  }
+  [data-theme="light"] .prose :not(pre) > code {
+    background: #e4e2dc;
+    border-color: #cbc8be;
+    color: var(--accent-text);
+  }
+  [data-theme="light"] .prose blockquote {
+    background: rgba(21, 128, 61, 0.05);
+    border-left-color: var(--accent-dim);
+    color: var(--ink-muted);
+  }
+  [data-theme="light"] .prose th {
+    background: var(--bg-elevated);
+    border-color: var(--border-solid);
+  }
+  [data-theme="light"] .prose td {
+    border-color: var(--border-solid);
+  }
+  [data-theme="light"] .prose tr:nth-child(even) td {
+    background: rgba(0, 0, 0, 0.025);
+  }
+  [data-theme="light"] .prose tr:hover td {
+    background: var(--bg-elevated);
+  }
+  [data-theme="light"] .prose img {
+    border-color: var(--border-solid);
+  }
+  [data-theme="light"] ::selection {
+    background-color: rgba(21, 128, 61, 0.14);
+    color: var(--ink);
+  }
+
+  /* Cards — title hover: dark mode uses #fff, light mode uses deep ink */
+  [data-theme="light"] .card:hover .card__title,
+  [data-theme="light"] .card-editorial:hover .card-editorial__title,
+  [data-theme="light"] .card-compact:hover .card-compact__title {
+    color: var(--ink) !important;
+  }
+
+  /* Card hover backgrounds: replace rgba(255,255,255,...) with dark wash */
+  [data-theme="light"] .card:hover {
+    background: var(--bg-overlay);
+    border-color: rgba(21, 128, 61, 0.3);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+  }
+  [data-theme="light"] .card-editorial:hover {
+    background: rgba(0, 0, 0, 0.025);
+    border-left-color: rgba(21, 128, 61, 0.4);
+  }
+  [data-theme="light"] .card-compact:hover {
+    background: rgba(0, 0, 0, 0.02);
+    border-left-color: rgba(21, 128, 61, 0.32);
+  }
+
+  /* Default card featured tint */
+  [data-theme="light"] .card--featured {
+    border-color: rgba(21, 128, 61, 0.14);
+  }
+
+  /* Tag borders: replace dark rgba with proper light values */
+  [data-theme="light"] .card__tag,
+  [data-theme="light"] .card-compact__tag {
+    border-color: rgba(21, 128, 61, 0.2);
+  }
+
+  /* Nav hover bg: rgba(255,255,255,0.04) is invisible on light bg */
+  [data-theme="light"] .nav-link:hover,
+  [data-theme="light"] .nav-link--active {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  [data-theme="light"] .nav-link--active::after {
+    background: rgba(21, 128, 61, 0.6);
+  }
+  [data-theme="light"] .nav-link--github:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  [data-theme="light"] .mobile-nav-link:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  [data-theme="light"] .mobile-menu-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  [data-theme="light"] .theme-toggle:hover {
+    background: rgba(0, 0, 0, 0.07);
+  }
+
+  /* Hero button: secondary border was rgba(255,255,255,0.12) — invisible */
+  [data-theme="light"] .hero-btn:hover {
+    border-color: rgba(0, 0, 0, 0.15);
+    background: var(--bg-overlay);
+    color: var(--ink);
+  }
+  [data-theme="light"] .hero-btn--ghost:hover {
+    background: var(--bg-elevated);
+    border-color: var(--border-solid);
+  }
+
+  /* Topic chip hover — replace green rgba with light-safe values */
+  [data-theme="light"] .topic-chip:hover {
+    color: var(--accent-text);
+    border-color: rgba(21, 128, 61, 0.25);
+    background: rgba(21, 128, 61, 0.07);
   }
 
   /* ───────────── Prose / Markdown Styles ───────────── */
@@ -333,5 +581,29 @@ const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
     border: none;
     border-top: 1px solid var(--border-solid);
     margin: 2.75em 0;
+  }
+
+  /* ── Mermaid Diagram Container ── */
+  .mermaid-diagram {
+    margin: 1.75em 0;
+    padding: 1.5em;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-solid);
+    border-radius: 6px;
+    overflow-x: auto;
+    text-align: center;
+  }
+
+  .mermaid-diagram svg {
+    max-width: 100%;
+    height: auto;
+    display: inline-block;
+  }
+
+  /* Mermaid SVG text inherits site font */
+  .mermaid-diagram svg text,
+  .mermaid-diagram svg .label {
+    font-family: var(--font-mono) !important;
+    font-size: 0.82rem !important;
   }
 </style>
