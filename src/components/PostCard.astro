@@ -1,0 +1,325 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+  tags?: string[];
+  readingTime?: string;
+  publishDate?: Date;
+  featured?: boolean;
+  variant?: "default" | "compact" | "editorial";
+}
+
+const {
+  title,
+  description,
+  href,
+  tags = [],
+  readingTime,
+  publishDate,
+  featured = false,
+  variant = "default",
+} = Astro.props;
+
+const formattedDate = publishDate
+  ? new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }).format(publishDate)
+  : null;
+---
+
+{
+  variant === "editorial" ? (
+    <article class="card-editorial">
+      <a href={href} class="card-editorial__link">
+        <div class="card-editorial__body">
+          <h3 class="card-editorial__title">{title}</h3>
+          <p class="card-editorial__desc">{description}</p>
+        </div>
+        <div class="card-editorial__meta">
+          {formattedDate && (
+            <time class="card-meta-date">{formattedDate}</time>
+          )}
+          {readingTime && (
+            <span class="card-meta-time">{readingTime}</span>
+          )}
+        </div>
+      </a>
+    </article>
+  ) : variant === "compact" ? (
+    <article class="card-compact">
+      <a href={href} class="card-compact__link">
+        <div class="card-compact__main">
+          <h3 class="card-compact__title">{title}</h3>
+          <p class="card-compact__desc">{description}</p>
+        </div>
+        <div class="card-compact__meta">
+          {formattedDate && (
+            <time class="card-meta-date">{formattedDate}</time>
+          )}
+          {tags[0] && (
+            <a href={`/tags/${tags[0]}`} class="card-compact__tag">
+              {tags[0]}
+            </a>
+          )}
+        </div>
+      </a>
+    </article>
+  ) : (
+    <article class={`card ${featured ? "card--featured" : ""}`}>
+      <a href={href} class="card__link">
+        <div class="card__body">
+          <h3 class="card__title">{title}</h3>
+          <p class="card__desc">{description}</p>
+        </div>
+
+        {tags.length > 0 && (
+          <div class="card__tags">
+            {tags.slice(0, 3).map((tag) => (
+              <span class="card__tag">{tag}</span>
+            ))}
+          </div>
+        )}
+
+        <div class="card__meta">
+          {formattedDate && (
+            <time class="card-meta-date">{formattedDate}</time>
+          )}
+          {readingTime && formattedDate && (
+            <span class="card-meta-sep">·</span>
+          )}
+          {readingTime && (
+            <span class="card-meta-time">{readingTime}</span>
+          )}
+        </div>
+      </a>
+    </article>
+  )
+}
+
+<style>
+  /* ─── Default Card ─── */
+  .card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-solid);
+    border-radius: 8px;
+    transition:
+      border-color 0.2s ease,
+      background 0.2s ease;
+  }
+  .card:hover {
+    border-color: rgba(74, 222, 128, 0.25);
+    background: var(--bg-overlay);
+  }
+  .card--featured {
+    border-color: rgba(74, 222, 128, 0.12);
+  }
+
+  .card__link {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem 1.4rem;
+    height: 100%;
+  }
+
+  .card__body {
+    flex: 1;
+  }
+
+  .card__title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+    transition: color 0.15s ease;
+  }
+  .card:hover .card__title {
+    color: #fff;
+  }
+
+  .card__desc {
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .card__tag {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--accent-text);
+    background: var(--accent-bg);
+    border: 1px solid rgba(74, 222, 128, 0.12);
+    border-radius: 3px;
+    padding: 0.18em 0.55em;
+    text-transform: lowercase;
+    letter-spacing: 0.02em;
+  }
+
+  .card__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  /* ─── Editorial Card (essays list style) ─── */
+  .card-editorial {
+    border-bottom: 1px solid var(--border-solid);
+    padding: 1.5rem 0;
+    transition: none;
+  }
+  .card-editorial:first-child {
+    border-top: 1px solid var(--border-solid);
+  }
+
+  .card-editorial__link {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    transition: none;
+  }
+
+  .card-editorial__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .card-editorial__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+    transition: color 0.15s ease;
+  }
+  .card-editorial:hover .card-editorial__title {
+    color: #fff;
+  }
+
+  .card-editorial__desc {
+    font-size: 0.83rem;
+    color: var(--ink-muted);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-editorial__meta {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+    padding-top: 0.15rem;
+  }
+
+  /* ─── Compact Card (notes) ─── */
+  .card-compact {
+    border-bottom: 1px solid var(--border-solid);
+  }
+  .card-compact:first-child {
+    border-top: 1px solid var(--border-solid);
+  }
+
+  .card-compact__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.9rem 0;
+    transition: none;
+  }
+
+  .card-compact__main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .card-compact__title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    margin-bottom: 0.15rem;
+    transition: color 0.15s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-compact:hover .card-compact__title {
+    color: #fff;
+  }
+
+  .card-compact__desc {
+    font-size: 0.78rem;
+    color: var(--ink-subtle);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-compact__meta {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .card-compact__tag {
+    font-family: var(--font-mono);
+    font-size: 0.67rem;
+    color: var(--accent-text);
+    background: var(--accent-bg);
+    border: 1px solid rgba(74, 222, 128, 0.12);
+    border-radius: 3px;
+    padding: 0.15em 0.5em;
+    text-transform: lowercase;
+    white-space: nowrap;
+  }
+
+  /* ─── Shared meta styles ─── */
+  .card-meta-date,
+  .card-meta-time,
+  .card-meta-sep {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-subtle);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 540px) {
+    .card-editorial__link {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .card-editorial__meta {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .card-compact__desc {
+      display: none;
+    }
+    .card-compact__meta {
+      gap: 0.5rem;
+    }
+  }
+</style>

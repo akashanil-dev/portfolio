@@ -1,0 +1,115 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-left">
+      <span class="footer-logo">akashanil.dev</span>
+      <span class="footer-copy">© {year} Akash A</span>
+    </div>
+
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a
+        href="https://github.com/akashanil-dev"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="footer-link"
+        aria-label="GitHub"
+      >
+        GitHub
+      </a>
+      <a href="/rss.xml" class="footer-link" aria-label="RSS Feed">
+        RSS
+      </a>
+      <a
+        href="mailto:akashanil084@gmail.com"
+        class="footer-link"
+        aria-label="Email"
+      >
+        Email
+      </a>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--border-solid);
+    padding: 1.75rem 0;
+    margin-top: auto;
+  }
+
+  .footer-inner {
+    max-width: var(--max-w-wide);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .footer-logo {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-subtle);
+    letter-spacing: -0.01em;
+  }
+
+  .footer-copy {
+    font-size: 0.78rem;
+    color: var(--ink-subtle);
+  }
+
+  .footer-left::before {
+    content: "";
+    display: block;
+    width: 1px;
+    height: 14px;
+    background: var(--border-solid);
+  }
+
+  .footer-links {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+  }
+
+  .footer-link {
+    font-size: 0.78rem;
+    color: var(--ink-subtle);
+    padding: 0.3rem 0.55rem;
+    border-radius: 4px;
+    transition:
+      color 0.15s ease,
+      background 0.15s ease;
+  }
+  .footer-link:hover {
+    color: var(--ink-muted);
+    background: var(--bg-elevated);
+  }
+
+  @media (max-width: 480px) {
+    .footer-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .footer-left::before {
+      display: none;
+    }
+    .footer-left {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+  }
+</style>

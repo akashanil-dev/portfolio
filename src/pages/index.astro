@@ -1,14 +1,463 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import Nav from "@/components/nav.astro";
-import Home from "@/components/home.astro";
-import Contact from "@/components/contact.astro";
-import Footer from "@/components/footer.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteNav from "@/components/site/SiteNav.astro";
+import SiteFooter from "@/components/site/SiteFooter.astro";
+import PostCard from "@/components/PostCard.astro";
+import { getCollection } from "astro:content";
+
+// Fetch content from all three collections
+const [allLabs, allEssays, allNotes] = await Promise.all([
+  getCollection("labs", ({ data }) => !data.draft),
+  getCollection("essays", ({ data }) => !data.draft),
+  getCollection("notes", ({ data }) => !data.draft),
+]);
+
+// Sort by date descending
+const sortByDate = (a: any, b: any) =>
+  new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime();
+
+const featuredLabs = allLabs
+  .filter((p) => p.data.featured)
+  .sort(sortByDate)
+  .slice(0, 4);
+
+const recentLabs = featuredLabs.length > 0 ? featuredLabs : allLabs.sort(sortByDate).slice(0, 4);
+
+const recentEssays = allEssays.sort(sortByDate).slice(0, 4);
+
+const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
 ---
 
-<Layout title="Akash A">
-  <Nav />
-  <Home />
-  <Contact />
-  <Footer />
-</Layout>
+<BaseLayout
+  title="akashanil.dev"
+  description="Infrastructure systems, Linux, observability, and the architecture beneath modern software."
+>
+  <SiteNav />
+
+  <main>
+    <!-- ─────────────────── Hero ─────────────────── -->
+    <section class="hero" id="hero">
+      <div class="section-wrap hero-wrap">
+        <div class="hero-eyebrow">
+          <span class="mono-label">~/ home</span>
+        </div>
+
+        <h1 class="hero-title">akashanil.dev</h1>
+
+        <p class="hero-subtitle">
+          Infrastructure systems, Linux, observability,<br
+            class="hero-br"
+          /> and the architecture beneath modern software.
+        </p>
+
+        <nav class="hero-actions" aria-label="Quick navigation">
+          <a href="/labs" class="hero-btn hero-btn--primary">Labs</a>
+          <a href="/essays" class="hero-btn">Essays</a>
+          <a href="/notes" class="hero-btn">Notes</a>
+          <a
+            href="https://github.com/akashanil-dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hero-btn hero-btn--ghost"
+          >
+            GitHub ↗
+          </a>
+        </nav>
+
+        <div class="hero-topics">
+          {
+            [
+              "linux",
+              "containers",
+              "observability",
+              "kubernetes",
+              "nginx",
+              "prometheus",
+              "systemd",
+              "networking",
+            ].map((t) => (
+              <a href={`/tags/${t}`} class="topic-chip">
+                {t}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────── Featured Labs ─────────────────── -->
+    <section class="content-section" id="labs">
+      <div class="section-wrap">
+        <div class="section-header">
+          <div class="section-header__left">
+            <span class="section-label">Labs</span>
+            <h2 class="section-title">Technical walkthroughs</h2>
+            <p class="section-desc">
+              Hands-on build logs — deploying real infrastructure, debugging
+              real problems.
+            </p>
+          </div>
+          <a href="/labs" class="section-viewall">View all →</a>
+        </div>
+
+        {
+          recentLabs.length > 0 ? (
+            <div class="labs-grid">
+              {recentLabs.map((lab) => (
+                <PostCard
+                  title={lab.data.title}
+                  description={lab.data.description}
+                  href={`/labs/${lab.slug}`}
+                  tags={lab.data.tags}
+                  readingTime={lab.data.readingTime}
+                  publishDate={lab.data.publishDate}
+                  featured={lab.data.featured}
+                />
+              ))}
+            </div>
+          ) : (
+            <p class="empty-state">No labs published yet.</p>
+          )
+        }
+      </div>
+    </section>
+
+    <!-- ─────────────────── Essays ─────────────────── -->
+    <section class="content-section" id="essays">
+      <div class="section-wrap">
+        <div class="section-header">
+          <div class="section-header__left">
+            <span class="section-label">Essays</span>
+            <h2 class="section-title">Systems thinking</h2>
+            <p class="section-desc">
+              Long-form reasoning about how infrastructure works and why it
+              evolved the way it did.
+            </p>
+          </div>
+          <a href="/essays" class="section-viewall">View all →</a>
+        </div>
+
+        {
+          recentEssays.length > 0 ? (
+            <div class="essays-list">
+              {recentEssays.map((essay) => (
+                <PostCard
+                  title={essay.data.title}
+                  description={essay.data.description}
+                  href={`/essays/${essay.slug}`}
+                  tags={essay.data.tags}
+                  readingTime={essay.data.readingTime}
+                  publishDate={essay.data.publishDate}
+                  variant="editorial"
+                />
+              ))}
+            </div>
+          ) : (
+            <p class="empty-state">No essays published yet.</p>
+          )
+        }
+      </div>
+    </section>
+
+    <!-- ─────────────────── Notes ─────────────────── -->
+    <section class="content-section" id="notes">
+      <div class="section-wrap">
+        <div class="section-header">
+          <div class="section-header__left">
+            <span class="section-label">Notes</span>
+            <h2 class="section-title">Quick references</h2>
+            <p class="section-desc">
+              Short technical notes, command references, and things worth
+              writing down.
+            </p>
+          </div>
+          <a href="/notes" class="section-viewall">View all →</a>
+        </div>
+
+        {
+          recentNotes.length > 0 ? (
+            <div class="notes-list">
+              {recentNotes.map((note) => (
+                <PostCard
+                  title={note.data.title}
+                  description={note.data.description}
+                  href={`/notes/${note.slug}`}
+                  tags={note.data.tags}
+                  readingTime={note.data.readingTime}
+                  publishDate={note.data.publishDate}
+                  variant="compact"
+                />
+              ))}
+            </div>
+          ) : (
+            <p class="empty-state">No notes published yet.</p>
+          )
+        }
+      </div>
+    </section>
+
+    <!-- ─────────────────── About ─────────────────── -->
+    <section class="content-section about-section" id="about">
+      <div class="section-wrap">
+        <div class="about-inner">
+          <span class="section-label">About</span>
+          <p class="about-text">
+            I'm Akash — an MCA student exploring Linux infrastructure,
+            observability, cloud-native systems, and how modern software
+            architecture evolved. This site is a public notebook: labs I've
+            run, essays I've written, and notes I want to remember.
+          </p>
+          <a href="/about" class="about-link">More about me →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  /* ── Layout primitives ── */
+  .section-wrap {
+    max-width: var(--max-w-wide);
+    margin: 0 auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 5rem 0 4.5rem;
+    border-bottom: 1px solid var(--border-solid);
+  }
+
+  .hero-wrap {
+    max-width: var(--max-w);
+  }
+
+  .hero-eyebrow {
+    margin-bottom: 1.5rem;
+  }
+
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-subtle);
+    letter-spacing: 0.03em;
+  }
+
+  .hero-title {
+    font-family: var(--font-mono);
+    font-size: clamp(1.75rem, 5vw, 2.75rem);
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    color: var(--ink-muted);
+    line-height: 1.7;
+    max-width: 52ch;
+    margin-bottom: 2.25rem;
+    font-weight: 300;
+  }
+
+  .hero-br {
+    display: none;
+  }
+  @media (min-width: 640px) {
+    .hero-br {
+      display: inline;
+    }
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-btn {
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 0.45rem 1rem;
+    border-radius: 5px;
+    border: 1px solid var(--border-solid);
+    color: var(--ink-muted);
+    background: var(--bg-elevated);
+    transition:
+      color 0.15s ease,
+      background 0.15s ease,
+      border-color 0.15s ease;
+  }
+  .hero-btn:hover {
+    color: var(--ink);
+    background: var(--bg-overlay);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+  .hero-btn--primary {
+    color: var(--accent-text);
+    background: var(--accent-bg);
+    border-color: rgba(74, 222, 128, 0.2);
+  }
+  .hero-btn--primary:hover {
+    background: var(--accent-bg-hover);
+    border-color: rgba(74, 222, 128, 0.35);
+    color: var(--accent);
+  }
+  .hero-btn--ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--ink-subtle);
+  }
+  .hero-btn--ghost:hover {
+    color: var(--ink-muted);
+    background: var(--bg-elevated);
+    border-color: var(--border-solid);
+  }
+
+  /* Topic chips */
+  .hero-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .topic-chip {
+    font-family: var(--font-mono);
+    font-size: 0.69rem;
+    color: var(--ink-subtle);
+    border: 1px solid var(--border-solid);
+    border-radius: 3px;
+    padding: 0.2em 0.6em;
+    text-transform: lowercase;
+    letter-spacing: 0.02em;
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease,
+      background 0.15s ease;
+  }
+  .topic-chip:hover {
+    color: var(--accent-text);
+    border-color: rgba(74, 222, 128, 0.2);
+    background: var(--accent-bg);
+  }
+
+  /* ── Content Sections ── */
+  .content-section {
+    padding: 3.5rem 0;
+    border-bottom: 1px solid var(--border-solid);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .section-header__left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent-text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: block;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+
+  .section-desc {
+    font-size: 0.82rem;
+    color: var(--ink-subtle);
+    max-width: 46ch;
+    line-height: 1.6;
+  }
+
+  .section-viewall {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-subtle);
+    white-space: nowrap;
+    padding-top: 0.35rem;
+    flex-shrink: 0;
+    transition: color 0.15s ease;
+  }
+  .section-viewall:hover {
+    color: var(--accent);
+  }
+
+  /* ── Labs grid ── */
+  .labs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  /* ── Essays list ── */
+  .essays-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Notes list ── */
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── About ── */
+  .about-section {
+    border-bottom: none;
+    padding-bottom: 5rem;
+  }
+
+  .about-inner {
+    max-width: 56ch;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .about-text {
+    font-size: 0.925rem;
+    color: var(--ink-muted);
+    line-height: 1.75;
+  }
+
+  .about-link {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-subtle);
+    transition: color 0.15s ease;
+    margin-top: 0.25rem;
+  }
+  .about-link:hover {
+    color: var(--accent);
+  }
+
+  /* Empty state */
+  .empty-state {
+    font-size: 0.82rem;
+    color: var(--ink-subtle);
+    padding: 2rem 0;
+  }
+</style>

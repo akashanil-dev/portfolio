@@ -1,0 +1,161 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteNav from "@/components/site/SiteNav.astro";
+import SiteFooter from "@/components/site/SiteFooter.astro";
+import PostCard from "@/components/PostCard.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const [labs, essays, notes] = await Promise.all([
+    getCollection("labs", ({ data }) => !data.draft),
+    getCollection("essays", ({ data }) => !data.draft),
+    getCollection("notes", ({ data }) => !data.draft),
+  ]);
+
+  const allPosts = [
+    ...labs.map((p) => ({ ...p, section: "labs" as const })),
+    ...essays.map((p) => ({ ...p, section: "essays" as const })),
+    ...notes.map((p) => ({ ...p, section: "notes" as const })),
+  ];
+
+  const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
+
+  return allTags.map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: allPosts
+        .filter((p) => p.data.tags.includes(tag))
+        .sort(
+          (a, b) =>
+            new Date(b.data.publishDate).getTime() -
+            new Date(a.data.publishDate).getTime()
+        ),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout
+  title={`#${tag} — akashanil.dev`}
+  description={`All posts tagged with "${tag}" on akashanil.dev.`}
+>
+  <SiteNav />
+
+  <main class="page-main">
+    <div class="page-wrap">
+      <header class="page-header">
+        <span class="page-label">Tag</span>
+        <h1 class="page-title">
+          <span class="tag-hash">#</span>{tag}
+        </h1>
+        <p class="page-desc">
+          {posts.length} post{posts.length !== 1 ? "s" : ""} tagged with <code
+            >{tag}</code
+          >.
+        </p>
+      </header>
+
+      {
+        posts.length > 0 ? (
+          <div class="results-list">
+            {posts.map((post) => (
+              <PostCard
+                title={post.data.title}
+                description={post.data.description}
+                href={`/${post.section}/${post.slug}`}
+                tags={post.data.tags}
+                readingTime={post.data.readingTime}
+                publishDate={post.data.publishDate}
+                variant="editorial"
+              />
+            ))}
+          </div>
+        ) : (
+          <p class="empty-state">No posts found for this tag.</p>
+        )
+      }
+
+      <div class="back-row">
+        <a href="/" class="back-link">← Back to home</a>
+      </div>
+    </div>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .page-main {
+    padding: 4rem 0 5rem;
+  }
+  .page-wrap {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  .page-header {
+    margin-bottom: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .page-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent-text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .page-title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    font-family: var(--font-mono);
+  }
+  .tag-hash {
+    color: var(--accent-text);
+    font-weight: 400;
+  }
+  .page-desc {
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+  .page-desc code {
+    font-family: var(--font-mono);
+    font-size: 0.82em;
+    color: var(--accent-text);
+    background: var(--accent-bg);
+    border: 1px solid rgba(74, 222, 128, 0.12);
+    border-radius: 3px;
+    padding: 0.15em 0.5em;
+  }
+  .results-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .empty-state {
+    font-size: 0.85rem;
+    color: var(--ink-subtle);
+    padding: 3rem 0;
+  }
+  .back-row {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-solid);
+  }
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-subtle);
+    transition: color 0.15s ease;
+  }
+  .back-link:hover {
+    color: var(--accent);
+  }
+</style>

@@ -1,0 +1,211 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import SiteNav from "@components/site/SiteNav.astro";
+import SiteFooter from "@components/site/SiteFooter.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  publishDate?: Date;
+  tags?: string[];
+  readingTime?: string;
+  section?: "labs" | "essays" | "notes";
+  slug?: string;
+}
+
+const {
+  title,
+  description,
+  publishDate,
+  tags = [],
+  readingTime,
+  section,
+  slug,
+} = Astro.props;
+
+const formattedDate = publishDate
+  ? new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }).format(publishDate)
+  : null;
+
+const ogType = "article";
+const pageTitle = `${title} — akashanil.dev`;
+---
+
+<BaseLayout title={pageTitle} description={description} type={ogType}>
+  <SiteNav />
+
+  <main class="post-main">
+    <article>
+      <!-- Post Header -->
+      <header class="post-header">
+        <div class="post-meta-top">
+          {
+            section && (
+              <a href={`/${section}`} class="post-section-link">
+                ← {section}
+              </a>
+            )
+          }
+        </div>
+
+        <h1 class="post-title">{title}</h1>
+
+        {description && <p class="post-description">{description}</p>}
+
+        <div class="post-meta-row">
+          {formattedDate && <time class="post-date">{formattedDate}</time>}
+          {readingTime && <span class="post-dot">·</span>}
+          {readingTime && <span class="post-reading-time">{readingTime}</span>}
+        </div>
+
+        {
+          tags.length > 0 && (
+            <div class="post-tags">
+              {tags.map((tag) => (
+                <a href={`/tags/${tag}`} class="post-tag">
+                  {tag}
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </header>
+
+      <hr class="post-divider" />
+
+      <!-- Post Body -->
+      <div class="prose post-body">
+        <slot />
+      </div>
+    </article>
+
+    <!-- Back link -->
+    {
+      section && (
+        <div class="post-back">
+          <a href={`/${section}`} class="back-link">
+            ← Back to {section}
+          </a>
+        </div>
+      )
+    }
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .post-main {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 5rem 1.5rem 6rem;
+  }
+
+  .post-meta-top {
+    margin-bottom: 1.5rem;
+  }
+
+  .post-section-link {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-subtle);
+    text-transform: lowercase;
+    letter-spacing: 0.03em;
+    transition: color 0.15s ease;
+  }
+  .post-section-link:hover {
+    color: var(--accent);
+  }
+
+  .post-title {
+    font-size: clamp(1.6rem, 4vw, 2.25rem);
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .post-description {
+    font-size: 1.05rem;
+    color: var(--ink-muted);
+    line-height: 1.65;
+    margin-bottom: 1.25rem;
+    max-width: 58ch;
+  }
+
+  .post-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .post-date,
+  .post-reading-time {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-subtle);
+  }
+
+  .post-dot {
+    color: var(--ink-subtle);
+    font-size: 0.78rem;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .post-tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent-text);
+    background: var(--accent-bg);
+    border: 1px solid rgba(74, 222, 128, 0.15);
+    border-radius: 3px;
+    padding: 0.2em 0.6em;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
+    text-transform: lowercase;
+    letter-spacing: 0.02em;
+  }
+  .post-tag:hover {
+    background: var(--accent-bg-hover);
+    color: var(--accent);
+  }
+
+  .post-divider {
+    border: none;
+    border-top: 1px solid var(--border-solid);
+    margin: 2rem 0 2.5rem;
+  }
+
+  .post-body {
+    font-size: 0.975rem;
+  }
+
+  .post-back {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-solid);
+  }
+
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-subtle);
+    transition: color 0.15s ease;
+  }
+  .back-link:hover {
+    color: var(--accent);
+  }
+</style>
