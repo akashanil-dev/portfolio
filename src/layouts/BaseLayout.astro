@@ -91,6 +91,101 @@ const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
     <script type="module" is:inline>
       import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
 
+      // ── Modal singleton ──────────────────────────────────────────────────────
+      function getModal() {
+        let modal = document.getElementById('mermaid-modal');
+        if (modal) return modal;
+
+        modal = document.createElement('div');
+        modal.id = 'mermaid-modal';
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('aria-label', 'Diagram expanded view');
+        modal.innerHTML = `
+          <div class="mermaid-modal__backdrop"></div>
+          <div class="mermaid-modal__box">
+            <div class="mermaid-modal__toolbar">
+              <span class="mermaid-modal__label">diagram</span>
+              <button class="mermaid-modal__close" aria-label="Close diagram">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <line x1="2" y1="2" x2="14" y2="14"/>
+                  <line x1="14" y1="2" x2="2" y2="14"/>
+                </svg>
+                <span>close</span>
+              </button>
+            </div>
+            <div class="mermaid-modal__content"></div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+
+        const closeBtn = modal.querySelector('.mermaid-modal__close');
+        const backdrop = modal.querySelector('.mermaid-modal__backdrop');
+
+        function closeModal() {
+          modal.classList.remove('mermaid-modal--open');
+          document.body.style.overflow = '';
+          modal.querySelector('.mermaid-modal__content').innerHTML = '';
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+        backdrop.addEventListener('click', closeModal);
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && modal.classList.contains('mermaid-modal--open')) {
+            closeModal();
+          }
+        });
+
+        return modal;
+      }
+
+      function openModal(svgSource) {
+        const modal = getModal();
+        const content = modal.querySelector('.mermaid-modal__content');
+        content.innerHTML = svgSource;
+        // Make the SVG fill the modal content area
+        const svg = content.querySelector('svg');
+        if (svg) {
+          svg.style.maxWidth = '100%';
+          svg.style.height = 'auto';
+          svg.style.display = 'block';
+          svg.style.margin = '0 auto';
+        }
+        modal.classList.add('mermaid-modal--open');
+        document.body.style.overflow = 'hidden';
+        modal.querySelector('.mermaid-modal__close').focus();
+      }
+
+      // ── Add expand button to a rendered diagram wrapper ──────────────────────
+      function addExpandButton(wrapper) {
+        const btn = document.createElement('button');
+        btn.className = 'mermaid-expand-btn';
+        btn.setAttribute('aria-label', 'View diagram fullscreen');
+        btn.innerHTML = `
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4 2 2 2 2 6"/>
+            <polyline points="12 2 14 2 14 6"/>
+            <polyline points="4 14 2 14 2 10"/>
+            <polyline points="12 14 14 14 14 10"/>
+            <line x1="2" y1="2" x2="6" y2="6"/>
+            <line x1="14" y1="2" x2="10" y2="6"/>
+            <line x1="2" y1="14" x2="6" y2="10"/>
+            <line x1="14" y1="14" x2="10" y2="10"/>
+          </svg>
+          expand
+        `;
+
+        btn.addEventListener('click', () => {
+          const svg = wrapper.querySelector('svg');
+          if (svg) openModal(svg.outerHTML);
+        });
+
+        // Make wrapper relative so button positions correctly
+        wrapper.style.position = 'relative';
+        wrapper.appendChild(btn);
+      }
+
+      // ── Mermaid init ─────────────────────────────────────────────────────────
       function initMermaid() {
         const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
         mermaid.initialize({
@@ -142,7 +237,6 @@ const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
               .map(l => l.textContent)
               .join('\n');
           } else {
-            // Fallback: grab raw text from <code>
             const codeEl = pre.querySelector('code');
             wrapper.textContent = (codeEl ?? pre).textContent;
           }
@@ -152,11 +246,17 @@ const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
         }
 
         if (diagrams.length > 0) {
-          mermaid.run({ nodes: diagrams });
+          mermaid.run({ nodes: diagrams }).then(() => {
+            // Inject expand button after SVG has been rendered into each wrapper
+            for (const wrapper of diagrams) {
+              if (wrapper.querySelector('svg')) {
+                addExpandButton(wrapper);
+              }
+            }
+          });
         }
       }
 
-      // Run after DOM is ready
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initMermaid);
       } else {
@@ -592,6 +692,7 @@ const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
     border-radius: 6px;
     overflow-x: auto;
     text-align: center;
+    position: relative;
   }
 
   .mermaid-diagram svg {
@@ -605,5 +706,161 @@ const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
   .mermaid-diagram svg .label {
     font-family: var(--font-mono) !important;
     font-size: 0.82rem !important;
+  }
+
+  /* ── Mermaid Expand Button ── */
+  .mermaid-expand-btn {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    padding: 0.28em 0.65em;
+    background: var(--bg-overlay);
+    border: 1px solid var(--border-solid);
+    border-radius: 4px;
+    color: var(--ink-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    opacity: 0;
+    transition:
+      opacity 0.18s ease,
+      color 0.15s ease,
+      background 0.15s ease,
+      border-color 0.15s ease;
+    z-index: 2;
+  }
+  .mermaid-diagram:hover .mermaid-expand-btn {
+    opacity: 1;
+  }
+  .mermaid-expand-btn:hover {
+    color: var(--accent);
+    background: var(--accent-bg);
+    border-color: rgba(74, 222, 128, 0.22);
+  }
+  [data-theme="light"] .mermaid-expand-btn:hover {
+    color: var(--accent);
+    background: var(--accent-bg);
+    border-color: rgba(21, 128, 61, 0.25);
+  }
+  .mermaid-expand-btn svg {
+    flex-shrink: 0;
+  }
+
+  /* ── Mermaid Modal ── */
+  #mermaid-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    align-items: center;
+    justify-content: center;
+  }
+  #mermaid-modal.mermaid-modal--open {
+    display: flex;
+  }
+
+  .mermaid-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: mermaid-fade-in 0.2s ease;
+  }
+  [data-theme="light"] .mermaid-modal__backdrop {
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  .mermaid-modal__box {
+    position: relative;
+    z-index: 1;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-solid);
+    border-radius: 10px;
+    width: min(92vw, 1080px);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow:
+      0 24px 80px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.04);
+    animation: mermaid-slide-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  [data-theme="light"] .mermaid-modal__box {
+    box-shadow:
+      0 24px 80px rgba(0, 0, 0, 0.18),
+      0 0 0 1px rgba(0, 0, 0, 0.06);
+  }
+
+  .mermaid-modal__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-solid);
+    flex-shrink: 0;
+  }
+
+  .mermaid-modal__label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-subtle);
+    letter-spacing: 0.06em;
+    text-transform: lowercase;
+  }
+  .mermaid-modal__label::before {
+    content: '// ';
+    opacity: 0.5;
+  }
+
+  .mermaid-modal__close {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    padding: 0.3em 0.7em;
+    background: transparent;
+    border: 1px solid var(--border-solid);
+    border-radius: 4px;
+    color: var(--ink-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition:
+      color 0.15s ease,
+      background 0.15s ease,
+      border-color 0.15s ease;
+  }
+  .mermaid-modal__close:hover {
+    color: var(--ink);
+    background: var(--bg-overlay);
+    border-color: var(--ink-subtle);
+  }
+
+  .mermaid-modal__content {
+    flex: 1;
+    overflow: auto;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mermaid-modal__content svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* ── Modal animations ── */
+  @keyframes mermaid-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes mermaid-slide-in {
+    from { opacity: 0; transform: scale(0.96) translateY(8px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
   }
 </style>
