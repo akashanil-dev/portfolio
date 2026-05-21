@@ -1,5 +1,5 @@
 ---
-title: "Building a Linux Monitoring Stack from Scratch: Node Exporter, Prometheus, and Grafana"
+title: "Setting Up Prometheus and Grafana for Linux Server Monitoring"
 description: "A complete infrastructure lab — install, configure, and visualize your Linux server's health using the modern observability stack. Includes real commands, architecture diagrams, PromQL queries, and troubleshooting."
 publishDate: 2026-05-21
 tags: ["prometheus", "grafana", "linux", "observability", "node-exporter", "monitoring", "lab"]
@@ -10,7 +10,7 @@ draft: false
 
 This lab builds a complete, production-aware monitoring stack on a Linux server. By the end, you will have a live Grafana dashboard displaying CPU usage, memory pressure, disk I/O, and network traffic — collected by Prometheus every 15 seconds from a Node Exporter agent running on the same machine.
 
-This is a companion to the essay *Flying Blind: The Infrastructure Problem That Built Modern Observability*, which covers the conceptual foundation. This lab covers the implementation.
+This is a companion to the essay [*The Infrastructure Problem That Built Modern Observability*](/essays/flying-blind-infrastructure-observability), which covers the conceptual foundation. This lab covers the implementation.
 
 ---
 
@@ -610,4 +610,4 @@ Your server now has complete visibility into its own behavior. CPU spikes, memor
 
 That shift — from reactive, manual inspection to continuous, automated visibility — is what monitoring means in practice.
 
-The companion essay, *Flying Blind*, covers why this capability became necessary and how the tools that provide it were developed. The two articles together give you both the conceptual foundation and the operational practice.
+The companion essay, [*The Infrastructure Problem That Built Modern Observability*](/essays/flying-blind-infrastructure-observability), covers why this capability became necessary and how the tools that provide it were developed. The two articles together give you both the conceptual foundation and the operational practice.
