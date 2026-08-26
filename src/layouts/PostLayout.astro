@@ -32,10 +32,22 @@ const formattedDate = publishDate
   : null;
 
 const ogType = "article";
-const pageTitle = `${title} — akashanil.dev`;
+const pageTitle = `${title} | Akash A`;
+const canonicalUrl = `https://akashanil.dev${Astro.url.pathname}`;
 ---
 
-<BaseLayout title={pageTitle} description={description} type={ogType}>
+<BaseLayout
+  title={pageTitle}
+  description={description}
+  type={ogType}
+  canonicalUrl={canonicalUrl}
+  articleSchema={{
+    title,
+    description,
+    publishDate,
+    url: canonicalUrl,
+  }}
+>
   <SiteNav />
 
   <main class="post-main">
@@ -62,8 +74,7 @@ const pageTitle = `${title} — akashanil.dev`;
           {readingTime && <span class="post-reading-time">{readingTime}</span>}
         </div>
 
-        {
-          tags.length > 0 && (
+        {tags.length > 0 && (
             <div class="post-tags">
               {tags.map((tag) => (
                 <a href={`/tags/${tag}`} class="post-tag">
@@ -71,8 +82,12 @@ const pageTitle = `${title} — akashanil.dev`;
                 </a>
               ))}
             </div>
-          )
-        }
+          )}
+
+        <div class="post-author">
+          <span class="post-author__by">by</span>
+          <a href="/about" class="post-author__name">Akash A</a>
+        </div>
       </header>
 
       <hr class="post-divider" />
@@ -181,6 +196,34 @@ const pageTitle = `${title} — akashanil.dev`;
   .post-tag:hover {
     background: var(--accent-bg-hover);
     color: var(--accent);
+  }
+
+  .post-author {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+  }
+
+  .post-author__by {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-subtle);
+    letter-spacing: 0.04em;
+  }
+
+  .post-author__name {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-dim);
+    transition: color 0.15s ease;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: transparent;
+  }
+  .post-author__name:hover {
+    color: var(--accent-text);
+    text-decoration-color: var(--accent-dim);
   }
 
   .post-divider {

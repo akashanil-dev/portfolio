@@ -1,10 +1,19 @@
 ---
+interface ArticleSchema {
+  title: string;
+  description?: string;
+  publishDate?: Date;
+  url: string;
+}
+
 interface Props {
   title: string;
   description?: string;
   ogImage?: string;
   canonicalUrl?: string;
   type?: "website" | "article";
+  personSchema?: boolean;
+  articleSchema?: ArticleSchema;
 }
 
 const {
@@ -13,10 +22,45 @@ const {
   ogImage = "/og-image.png",
   canonicalUrl,
   type = "website",
+  personSchema = false,
+  articleSchema,
 } = Astro.props;
 
 const siteUrl = "https://akashanil.dev";
 const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Akash A",
+  url: siteUrl,
+  sameAs: [
+    "https://www.linkedin.com/in/akashanil-dev",
+    "https://github.com/akashanil-dev",
+    "https://meta.wikimedia.org/wiki/User:Akash_A",
+  ],
+};
+
+const articleJsonLd = articleSchema
+  ? {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: articleSchema.title,
+      description: articleSchema.description,
+      url: articleSchema.url,
+      datePublished: articleSchema.publishDate?.toISOString(),
+      author: {
+        "@type": "Person",
+        name: "Akash A",
+        url: `${siteUrl}/about`,
+      },
+      publisher: {
+        "@type": "Person",
+        name: "Akash A",
+        url: siteUrl,
+      },
+    }
+  : null;
 ---
 
 <!doctype html>
@@ -55,6 +99,14 @@ const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/favicon.webp" />
+
+    <!-- Structured Data -->
+    {personSchema && (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
+    )}
+    {articleJsonLd && (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    )}
 
     <!-- Theme init: runs synchronously before paint to prevent flash -->
     <script is:inline>
