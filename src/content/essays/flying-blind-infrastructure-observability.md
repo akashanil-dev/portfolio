@@ -540,3 +540,11 @@ The following are the primary sources that informed this essay, as well as curat
 
 - **OpenTelemetry Documentation** — [opentelemetry.io/docs](https://opentelemetry.io/docs/)
   For engineers looking beyond Prometheus to the broader observability ecosystem and vendor-neutral instrumentation.
+
+---
+
+**On this site**
+
+- [Setting Up Prometheus and Grafana for Linux Server Monitoring](/labs/linux-monitoring-stack) — the hands-on companion to this essay. Build the exact stack described here on a real Linux machine.
+- [Prometheus and Grafana: How the Observability Stack Actually Works](/essays/prometheus-grafana-explained) — a detailed technical breakdown of how the two tools communicate, how PromQL works, and what the data flow looks like end to end.
+- [Why Monitoring Became Complex](/essays/why-monitoring-became-complex) — traces the same history from a different angle: why observability tooling evolved the way it did.

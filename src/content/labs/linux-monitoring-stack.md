@@ -612,3 +612,11 @@ Your server now has complete visibility into its own behavior. CPU spikes, memor
 That shift — from reactive, manual inspection to continuous, automated visibility — is what monitoring means in practice.
 
 The companion essay, [*The Infrastructure Problem That Built Modern Observability*](/essays/flying-blind-infrastructure-observability), covers why this capability became necessary and how the tools that provide it were developed. The two articles together give you both the conceptual foundation and the operational practice.
+
+---
+
+**Related reading**
+
+- [The Infrastructure Problem That Built Modern Observability](/essays/flying-blind-infrastructure-observability) — the conceptual foundation for this lab. Why did Prometheus and Grafana exist in the first place?
+- [Prometheus and Grafana: How the Observability Stack Actually Works](/essays/prometheus-grafana-explained) — a deep dive into the data flow between these two tools, covering TSDB internals, the pull model, and PromQL.
+- [PromQL Cheat Sheet](/notes/promql-cheat-sheet) — quick reference for the queries used in this lab.
