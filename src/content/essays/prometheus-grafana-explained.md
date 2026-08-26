@@ -6,6 +6,7 @@ tags: ["observability", "prometheus", "grafana", "architecture", "promql"]
 readingTime: "18 min read"
 featured: false
 draft: false
+hasMermaid: true
 ---
 
 When you first encounter a monitoring stack with dashboards full of live CPU graphs and memory gauges, it can feel like magic. Open the Grafana UI and data is just *there*. But underneath, there are two distinct tools doing very different jobs, connected by a clean, deliberate API boundary. This essay breaks that apart.
@@ -363,3 +364,11 @@ When I first set up this stack, I treated Grafana and Prometheus as a single mon
 The more important realization was architectural: this is what good system design looks like. Two tools, each excellent at one thing, connected by a stable API. Neither is responsible for what the other does. The complexity of the full stack (service discovery, cardinality management, alert routing, dashboard templating) is manageable precisely because each concern is isolated.
 
 For anyone working in DevOps or infrastructure engineering, truly understanding this data flow — from the raw text at `/metrics`, through the TSDB, through a PromQL range query, into a JSON matrix, and finally onto a rendered graph — is the difference between operating a monitoring stack and understanding one.
+
+---
+
+**Related reading**
+
+- [Setting Up Prometheus and Grafana for Linux Server Monitoring](/labs/linux-monitoring-stack) — the hands-on companion to this essay. Install the stack, write the config, and watch the data flow in real time.
+- [PromQL Cheat Sheet](/notes/promql-cheat-sheet) — a quick reference for the queries covered in this essay.
+- [Why Monitoring Became Complex](/essays/why-monitoring-became-complex) — the historical context for why this stack exists and why monitoring tooling evolved to this level of sophistication.

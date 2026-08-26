@@ -8,6 +8,7 @@ const postSchema = z.object({
   readingTime: z.string().default("5 min read"),
   featured: z.boolean().default(false),
   draft: z.boolean().default(false),
+  hasMermaid: z.boolean().default(false),
 });
 
 const labs = defineCollection({

@@ -39,3 +39,10 @@ My rough heuristic: understand one layer below where you work. If you write appl
 You don't need to be an expert at every layer. But you need enough of a model that when an abstraction leaks — when something goes wrong below your usual working altitude — you're not completely lost.
 
 That's the cost of abstraction if you ignore it: you build systems you can't debug. And debugging is where real understanding lives.
+
+---
+
+**Related reading**
+
+- [Why Kubernetes Exists: The Problem It Actually Solves](/essays/why-kubernetes-exists) — a concrete example of a large abstraction: useful when it serves your scale, dangerous when you don't understand what it hides.
+- [Why Monitoring Became Complex](/essays/why-monitoring-became-complex) — observability complexity is a direct result of abstraction stacking. Each monitoring layer exists because the one below became insufficient.

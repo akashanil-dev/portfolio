@@ -45,3 +45,11 @@ Newer platforms (Grafana's unified stack, OpenTelemetry, Honeycomb) try to unify
 The complexity grew because the systems being monitored grew more complex. Monitoring isn't arbitrarily over-engineered — each layer was a pragmatic response to a failure mode that simpler tools couldn't diagnose.
 
 The insight for engineers: understand what question each tool is designed to answer. Metrics for trends and alerting. Logs for event-level debugging. Traces for cross-service flow. Use the right tool for the right question. Don't try to answer everything with one.
+
+---
+
+**Related reading**
+
+- [Prometheus and Grafana: How the Observability Stack Actually Works](/essays/prometheus-grafana-explained) — a detailed breakdown of how the metrics layer works in practice: what Prometheus actually does, and how Grafana queries it.
+- [Setting Up Prometheus and Grafana for Linux Server Monitoring](/labs/linux-monitoring-stack) — the hands-on companion. Build the stack described in this essay on a real Linux machine.
+- [The Infrastructure Problem That Built Modern Observability](/essays/flying-blind-infrastructure-observability) — the historical context: why observability became necessary in the first place.

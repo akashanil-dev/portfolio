@@ -20,7 +20,7 @@ export async function GET(context: APIContext) {
       );
 
   return rss({
-    title: "akashanil.dev",
+    title: "Akash A — akashanil.dev",
     description:
       "Infrastructure systems, Linux, observability, and the architecture beneath modern software.",
     site: context.site ?? "https://akashanil.dev",

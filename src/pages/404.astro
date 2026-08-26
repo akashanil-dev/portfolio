@@ -1,0 +1,91 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteNav from "@/components/site/SiteNav.astro";
+import SiteFooter from "@/components/site/SiteFooter.astro";
+---
+
+<BaseLayout
+  title="404 — Page not found | akashanil.dev"
+  description="The page you were looking for doesn't exist."
+>
+  <SiteNav />
+
+  <main class="not-found-main">
+    <div class="not-found-wrap">
+      <div class="not-found-eyebrow">
+        <span class="mono-label">~/ 404</span>
+      </div>
+
+      <h1 class="not-found-code">404</h1>
+      <p class="not-found-msg">This page doesn't exist.</p>
+
+      <nav class="not-found-nav" aria-label="Return navigation">
+        <a href="/" class="not-found-link">← Home</a>
+        <a href="/labs" class="not-found-link">Labs</a>
+        <a href="/essays" class="not-found-link">Essays</a>
+        <a href="/notes" class="not-found-link">Notes</a>
+      </nav>
+    </div>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .not-found-main {
+    padding: 8rem 1.5rem 10rem;
+    min-height: 60vh;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .not-found-wrap {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .not-found-eyebrow {
+    margin-bottom: 1.5rem;
+  }
+
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-dim);
+    letter-spacing: 0.03em;
+  }
+
+  .not-found-code {
+    font-family: var(--font-mono);
+    font-size: clamp(3rem, 12vw, 6rem);
+    font-weight: 400;
+    color: var(--accent-text);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .not-found-msg {
+    font-size: 1rem;
+    color: var(--ink-muted);
+    margin-bottom: 2.5rem;
+  }
+
+  .not-found-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .not-found-link {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+    transition: color 0.15s ease;
+  }
+
+  .not-found-link:hover {
+    color: var(--accent-text);
+  }
+</style>

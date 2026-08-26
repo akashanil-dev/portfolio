@@ -45,3 +45,10 @@ The kernel then enforces the limit — if the process exceeds it, it receives an
 ## The Unified Hierarchy
 
 In cgroups v1, each controller had its own hierarchy (`/sys/fs/cgroup/memory/`, `/sys/fs/cgroup/cpu/`, etc.). v2 unifies everything under a single tree. This enables atomic operations across controllers — useful for containers that need coordinated CPU + memory constraints.
+
+---
+
+**Related reading**
+
+- [Why Kubernetes Exists: The Problem It Actually Solves](/essays/why-kubernetes-exists) — Kubernetes is a cgroup orchestrator at its core. Understanding cgroups gives you a real mental model of what Kubernetes actually enforces.
+- [Building a Docker Homelab: From Zero to Self-Hosted](/labs/docker-homelab-setup) — Docker writes to cgroup files under the hood. This lab shows you what that looks like in practice.

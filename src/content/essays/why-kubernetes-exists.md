@@ -51,3 +51,11 @@ The question is always: does the complexity of Kubernetes serve your scale and r
 Kubernetes exists because the operational complexity of distributed containerized systems is real, irreducible, and roughly standardizable. It's an attempt to make that complexity explicit, composable, and shared — rather than hidden in bespoke scripts that only one person understands.
 
 Understanding *why* it exists helps you understand when to use it, when not to, and how to operate it well when you must.
+
+---
+
+**Related reading**
+
+- [The Cost of Abstraction](/essays/the-cost-of-abstraction) — Kubernetes is itself a large abstraction. This essay examines what you lose when you stop understanding the layers below.
+- [Understanding Linux cgroups v2](/notes/linux-cgroups-v2) — the kernel primitive underneath every container. Understanding cgroups gives you a model for what Kubernetes is actually managing.
+- [Building a Docker Homelab: From Zero to Self-Hosted](/labs/docker-homelab-setup) — start here if you want hands-on experience with containers before tackling orchestration.

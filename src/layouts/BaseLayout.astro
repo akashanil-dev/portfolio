@@ -14,6 +14,7 @@ interface Props {
   type?: "website" | "article";
   personSchema?: boolean;
   articleSchema?: ArticleSchema;
+  hasMermaid?: boolean;
 }
 
 const {
@@ -24,22 +25,35 @@ const {
   type = "website",
   personSchema = false,
   articleSchema,
+  hasMermaid = false,
 } = Astro.props;
 
 const siteUrl = "https://akashanil.dev";
 const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
 
-const personJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Akash A",
-  url: siteUrl,
-  sameAs: [
-    "https://www.linkedin.com/in/akashanil-dev",
-    "https://github.com/akashanil-dev",
-    "https://meta.wikimedia.org/wiki/User:Akash_A",
-  ],
-};
+const personJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Akash A",
+    url: siteUrl,
+    sameAs: [
+      "https://www.linkedin.com/in/akashanil-dev",
+      "https://github.com/akashanil-dev",
+      "https://meta.wikimedia.org/wiki/User:Akash_A",
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "akashanil.dev",
+    url: siteUrl,
+    author: {
+      "@type": "Person",
+      name: "Akash A",
+    },
+  },
+];
 
 const articleJsonLd = articleSchema
   ? {
@@ -48,6 +62,10 @@ const articleJsonLd = articleSchema
       headline: articleSchema.title,
       description: articleSchema.description,
       url: articleSchema.url,
+      mainEntityOfPage: {
+        "@type": "WebPage",
+        "@id": articleSchema.url,
+      },
       datePublished: articleSchema.publishDate?.toISOString(),
       author: {
         "@type": "Person",
@@ -98,7 +116,7 @@ const articleJsonLd = articleSchema
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/favicon.webp" />
+    <link rel="icon" type="image/webp" href="/favicon.webp" />
 
     <!-- Structured Data -->
     {personSchema && (
@@ -107,6 +125,7 @@ const articleJsonLd = articleSchema
     {articleJsonLd && (
       <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
     )}
+
 
     <!-- Theme init: runs synchronously before paint to prevent flash -->
     <script is:inline>
@@ -139,8 +158,8 @@ const articleJsonLd = articleSchema
       />
     </noscript>
 
-    <!-- Mermaid diagram renderer -->
-    <script type="module" is:inline>
+    <!-- Mermaid diagram renderer (only on pages with diagrams) -->
+    {hasMermaid && <script type="module" is:inline>
       import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
 
       // ── Modal singleton ──────────────────────────────────────────────────────
@@ -314,7 +333,7 @@ const articleJsonLd = articleSchema
       } else {
         initMermaid();
       }
-    </script>
+    </script>}
   </head>
   <body>
     <slot />
@@ -914,5 +933,24 @@ const articleJsonLd = articleSchema
   @keyframes mermaid-slide-in {
     from { opacity: 0; transform: scale(0.96) translateY(8px); }
     to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* ── Focus visible — keyboard navigation ── */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  /* ── Reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 </style>

@@ -46,6 +46,31 @@ import SiteFooter from "@/components/site/SiteFooter.astro";
 
         <hr class="about-divider" />
 
+        <div class="about-currently">
+          <h2 class="about-section-heading">Currently</h2>
+          <p>
+            Pursuing an MCA and building out this site. Actively contributing to
+            Wikimedia projects and exploring Linux internals, container runtimes,
+            and observability tooling.
+          </p>
+        </div>
+
+        <hr class="about-divider" />
+
+        <div class="about-structure">
+          <h2 class="about-section-heading">This site</h2>
+          <p>
+            The content is organized into three distinct types:
+          </p>
+          <ul class="about-structure__list">
+            <li><strong>Labs</strong> — hands-on build logs. Real infrastructure, real commands, real debugging.</li>
+            <li><strong>Essays</strong> — long-form systems thinking. Why things work the way they do.</li>
+            <li><strong>Notes</strong> — short references, cheatsheets, and things worth writing down.</li>
+          </ul>
+        </div>
+
+        <hr class="about-divider" />
+
         <div class="about-links">
           <h2 class="about-links__heading">Links</h2>
           <ul class="about-links__list">
@@ -103,13 +128,13 @@ import SiteFooter from "@/components/site/SiteFooter.astro";
         <hr class="about-divider" />
 
         <div class="about-stack">
-          <h2 class="about-links__heading">Site stack</h2>
+          <h2 class="about-section-heading">Site stack</h2>
           <p class="about-stack__note">
-            Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a>,
-            styled with <a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer">Tailwind CSS</a>,
+            Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a>
+            (static output, content collections, Shiki syntax highlighting),
+            styled with vanilla CSS,
             deployed on <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">Vercel</a>.
-            Content in Markdown via Astro Content Collections.
-            Syntax highlighting via Shiki.
+            Content is Markdown via Astro Content Collections.
           </p>
         </div>
       </div>
@@ -232,5 +257,43 @@ import SiteFooter from "@/components/site/SiteFooter.astro";
     font-size: 0.85rem;
     color: var(--ink-subtle);
     line-height: 1.7;
+  }
+
+  /* Shared heading style for Currently / This site / Site stack */
+  .about-section-heading {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+  }
+
+  .about-currently p,
+  .about-structure p {
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+    line-height: 1.8;
+  }
+
+  .about-structure__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-top: 0.5rem;
+  }
+
+  .about-structure__list li {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    line-height: 1.7;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--border-solid);
+  }
+
+  .about-structure__list strong {
+    color: var(--ink);
+    font-weight: 600;
   }
 </style>

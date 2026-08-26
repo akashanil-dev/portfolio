@@ -79,3 +79,10 @@ sudo systemctl reload nginx
 # Tail access logs
 sudo tail -f /var/log/nginx/access.log
 ```
+
+---
+
+**Related reading**
+
+- [Building a Docker Homelab: From Zero to Self-Hosted](/labs/docker-homelab-setup) — run the services that Nginx will proxy. This lab and the homelab lab complement each other directly.
+- [Why Kubernetes Exists: The Problem It Actually Solves](/essays/why-kubernetes-exists) — once you've outgrown a single-machine Nginx setup, this essay explains what comes next and why.

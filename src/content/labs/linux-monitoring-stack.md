@@ -6,6 +6,7 @@ tags: ["prometheus", "grafana", "linux", "observability", "node-exporter", "moni
 readingTime: "25 min read"
 featured: true
 draft: false
+hasMermaid: true
 ---
 
 This lab builds a complete, production-aware monitoring stack on a Linux server. By the end, you will have a live Grafana dashboard displaying CPU usage, memory pressure, disk I/O, and network traffic — collected by Prometheus every 15 seconds from a Node Exporter agent running on the same machine.
