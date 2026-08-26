@@ -4,6 +4,7 @@ const postSchema = z.object({
   title: z.string(),
   description: z.string(),
   publishDate: z.coerce.date(),
+  updatedDate: z.coerce.date().optional(),
   tags: z.array(z.string()).default([]),
   readingTime: z.string().default("5 min read"),
   featured: z.boolean().default(false),

@@ -3,6 +3,7 @@ interface ArticleSchema {
   title: string;
   description?: string;
   publishDate?: Date;
+  updatedDate?: Date;
   url: string;
 }
 
@@ -67,6 +68,7 @@ const articleJsonLd = articleSchema
         "@id": articleSchema.url,
       },
       datePublished: articleSchema.publishDate?.toISOString(),
+      dateModified: articleSchema.updatedDate?.toISOString() ?? articleSchema.publishDate?.toISOString(),
       author: {
         "@type": "Person",
         name: "Akash A",
