@@ -67,3 +67,12 @@ groups:
         annotations:
           summary: "High CPU usage on {{ $labels.instance }}"
 ```
+
+---
+
+**Related reading**
+
+- [Setting Up Prometheus and Grafana for Linux Server Monitoring](/labs/linux-monitoring-stack) — put these queries to work in a real monitoring stack.
+- [Prometheus and Grafana: How the Observability Stack Actually Works](/essays/prometheus-grafana-explained) — understand why these queries are shaped the way they are.
+- [Why Kubernetes Exists: The Problem It Actually Solves](/essays/why-kubernetes-exists) — Kubernetes is a cgroup orchestrator at its core. Understanding cgroups gives you a real mental model of what Kubernetes actually enforces.
+- [Building a Docker Homelab: From Zero to Self-Hosted](/labs/docker-homelab-setup) — Docker writes to cgroup files under the hood. This lab shows you what that looks like in practice.

@@ -46,6 +46,11 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
         <h1 class="hero-title">Akash A</h1>
         <p class="hero-domain">akashanil.dev</p>
 
+        <p class="hero-intro">
+          I'm Akash — a developer and MCA student interested in software,
+          Linux, infrastructure, and open source. I also contribute to Wikimedia.
+        </p>
+
         <p class="hero-subtitle">
           Infrastructure systems, Linux, observability,<br
             class="hero-br"
@@ -61,15 +66,28 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
           <a href="/labs" class="hero-btn hero-btn--primary">Labs</a>
           <a href="/essays" class="hero-btn">Essays</a>
           <a href="/notes" class="hero-btn">Notes</a>
+        </nav>
+
+        <div class="hero-links">
           <a
             href="https://github.com/akashanil-dev"
             target="_blank"
             rel="noopener noreferrer"
-            class="hero-btn hero-btn--ghost"
-          >
-            GitHub ↗
-          </a>
-        </nav>
+            class="hero-ext-link"
+          >GitHub ↗</a>
+          <a
+            href="https://www.linkedin.com/in/akashanil-dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hero-ext-link"
+          >LinkedIn ↗</a>
+          <a
+            href="https://meta.wikimedia.org/wiki/User:Akash_A"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hero-ext-link"
+          >Wikimedia ↗</a>
+        </div>
 
         <div class="hero-topics">
           {
@@ -203,16 +221,14 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
       </div>
     </section>
 
-    <!-- ─────────────────── About ─────────────────── -->
+    <!-- ─────────────────── About teaser ─────────────────── -->
     <section class="content-section about-section" id="about">
       <div class="section-wrap">
         <div class="about-inner">
           <span class="section-label">About</span>
           <p class="about-text">
-            I'm Akash — an MCA student exploring Linux infrastructure,
-            observability, cloud-native systems, and how modern software
-            architecture evolved. I'm also a <a href="https://meta.wikimedia.org/wiki/User:Akash_A" target="_blank" rel="noopener noreferrer" class="about-ext-link">Wikimedia contributor</a>, working on open-source and Wikimedia technology projects. This site is a public notebook: labs I've
-            run, essays I've written, and notes I want to remember.
+            I'm Akash — a developer and MCA student interested in software,
+            systems, open source, and Wikimedia.
           </p>
           <a href="/about" class="about-link">More about me →</a>
         </div>
@@ -269,6 +285,15 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
     color: var(--accent-text);
     letter-spacing: -0.01em;
     margin-bottom: 1.25rem;
+  }
+
+  .hero-intro {
+    font-size: clamp(0.9rem, 2.2vw, 1rem);
+    color: var(--ink-muted);
+    line-height: 1.75;
+    max-width: 56ch;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
   }
 
   .hero-subtitle {
@@ -344,6 +369,26 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
     color: var(--ink-muted);
     background: var(--bg-elevated);
     border-color: var(--border-solid);
+  }
+
+  /* External identity links */
+  .hero-links {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-ext-link {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-dim);
+    letter-spacing: 0.01em;
+    transition: color 0.15s ease;
+  }
+  .hero-ext-link:hover {
+    color: var(--accent-text);
   }
 
   /* Topic chips */

@@ -83,3 +83,11 @@ services:
 ## What I Learned
 
 Running this stack highlighted how much work a managed platform does: automatic TLS renewal, health-based routing, persistent storage management, and zero-downtime restarts. Each of these is a real operational concern at scale.
+
+---
+
+**Related reading**
+
+- [Why Kubernetes Exists: The Problem It Actually Solves](/essays/why-kubernetes-exists) — once you've run containers locally, this essay explains the operational problems that emerge at scale and why Kubernetes became the answer.
+- [Understanding Linux cgroups v2](/notes/linux-cgroups-v2) — the kernel primitive that makes container resource limits possible. Docker's `--memory` flag writes directly to cgroup files.
+- [Nginx as a Reverse Proxy: Configuration Deep Dive](/labs/nginx-reverse-proxy) — put Nginx in front of your homelab services for TLS termination and routing.
