@@ -3,6 +3,8 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteNav from "@/components/site/SiteNav.astro";
 import SiteFooter from "@/components/site/SiteFooter.astro";
 import PostCard from "@/components/PostCard.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import { projects } from "@/data/projects";
 import { getCollection } from "astro:content";
 
 // Fetch content from all three collections
@@ -26,11 +28,19 @@ const recentLabs = featuredLabs.length > 0 ? featuredLabs : allLabs.sort(sortByD
 const recentEssays = allEssays.sort(sortByDate).slice(0, 4);
 
 const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
+
+// Only link to sections that have published posts
+const sections = [
+  { href: "/projects", label: "Projects", count: projects.length },
+  { href: "/labs", label: "Labs", count: allLabs.length },
+  { href: "/essays", label: "Essays", count: allEssays.length },
+  { href: "/notes", label: "Notes", count: allNotes.length },
+].filter((s) => s.count > 0);
 ---
 
 <BaseLayout
   title="Akash A — Linux, Infrastructure & Open Source | akashanil.dev"
-  description="Akash A's engineering notebook. Labs, essays, and notes on Linux infrastructure, observability, and cloud-native systems."
+  description="Akash A — developer and MCA student interested in Linux, infrastructure, and open source."
   personSchema={true}
 >
   <SiteNav />
@@ -57,16 +67,22 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
           /> and the architecture beneath modern software.
         </p>
 
-        <p class="hero-tagline">
-          Labs, essays, and engineering notes from ongoing experiments
-          in infrastructure and observability.
-        </p>
-
-        <nav class="hero-actions" aria-label="Quick navigation">
-          <a href="/labs" class="hero-btn hero-btn--primary">Labs</a>
-          <a href="/essays" class="hero-btn">Essays</a>
-          <a href="/notes" class="hero-btn">Notes</a>
-        </nav>
+        {
+          sections.length > 0 ? (
+            <nav class="hero-actions" aria-label="Quick navigation">
+              {sections.map((s, i) => (
+                <a href={s.href} class={i === 0 ? "hero-btn hero-btn--primary" : "hero-btn"}>
+                  {s.label}
+                </a>
+              ))}
+            </nav>
+          ) : (
+            <p class="hero-tagline">
+              Nothing published yet — labs, essays, and notes will appear here
+              as I build and write them.
+            </p>
+          )
+        }
 
         <div class="hero-links">
           <a
@@ -88,138 +104,133 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
             class="hero-ext-link"
           >Wikimedia ↗</a>
         </div>
-
-        <div class="hero-topics">
-          {
-            [
-              "linux",
-              "containers",
-              "observability",
-              "kubernetes",
-              "nginx",
-              "prometheus",
-              "systemd",
-              "networking",
-            ].map((t) => (
-              <a href={`/tags/${t}`} class="topic-chip">
-                {t}
-              </a>
-            ))
-          }
-        </div>
       </div>
     </section>
+
+    <!-- ─────────────────── Projects ─────────────────── -->
+    {projects.length > 0 && (
+      <section class="content-section" id="projects">
+        <div class="section-wrap">
+          <div class="section-header">
+            <div class="section-header__left">
+              <span class="section-label">Projects</span>
+              <h2 class="section-title">Stuff I made</h2>
+              <p class="section-desc">
+                Things I built because I wanted them to exist. They're live —
+                go break them.
+              </p>
+            </div>
+            <a href="/projects" class="section-viewall">View all →</a>
+          </div>
+
+          <div class="projects-grid">
+            {projects.slice(0, 4).map((project) => (
+              <ProjectCard project={project} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
 
     <!-- ─────────────────── Featured Labs ─────────────────── -->
-    <section class="content-section" id="labs">
-      <div class="section-wrap">
-        <div class="section-header">
-          <div class="section-header__left">
-            <span class="section-label">Labs</span>
-            <h2 class="section-title">Technical walkthroughs</h2>
-            <p class="section-desc">
-              Hands-on build logs — deploying real infrastructure, debugging
-              real problems.
-            </p>
-          </div>
-          <a href="/labs" class="section-viewall">View all →</a>
-        </div>
-
-        {
-          recentLabs.length > 0 ? (
-            <div class="labs-grid">
-              {recentLabs.map((lab) => (
-                <PostCard
-                  title={lab.data.title}
-                  description={lab.data.description}
-                  href={`/labs/${lab.slug}`}
-                  tags={lab.data.tags}
-                  readingTime={lab.data.readingTime}
-                  publishDate={lab.data.publishDate}
-                  featured={lab.data.featured}
-                />
-              ))}
+    {recentLabs.length > 0 && (
+      <section class="content-section" id="labs">
+        <div class="section-wrap">
+          <div class="section-header">
+            <div class="section-header__left">
+              <span class="section-label">Labs</span>
+              <h2 class="section-title">Technical walkthroughs</h2>
+              <p class="section-desc">
+                Hands-on build logs — deploying real infrastructure, debugging
+                real problems.
+              </p>
             </div>
-          ) : (
-            <p class="empty-state">No labs published yet.</p>
-          )
-        }
-      </div>
-    </section>
+            <a href="/labs" class="section-viewall">View all →</a>
+          </div>
+
+          <div class="labs-grid">
+            {recentLabs.map((lab) => (
+              <PostCard
+                title={lab.data.title}
+                description={lab.data.description}
+                href={`/labs/${lab.slug}`}
+                tags={lab.data.tags}
+                readingTime={lab.data.readingTime}
+                publishDate={lab.data.publishDate}
+                featured={lab.data.featured}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
 
     <!-- ─────────────────── Essays ─────────────────── -->
-    <section class="content-section" id="essays">
-      <div class="section-wrap">
-        <div class="section-header">
-          <div class="section-header__left">
-            <span class="section-label">Essays</span>
-            <h2 class="section-title">Systems thinking</h2>
-            <p class="section-desc">
-              Long-form reasoning about how infrastructure works and why it
-              evolved the way it did.
-            </p>
-          </div>
-          <a href="/essays" class="section-viewall">View all →</a>
-        </div>
-
-        {
-          recentEssays.length > 0 ? (
-            <div class="essays-list">
-              {recentEssays.map((essay) => (
-                <PostCard
-                  title={essay.data.title}
-                  description={essay.data.description}
-                  href={`/essays/${essay.slug}`}
-                  tags={essay.data.tags}
-                  readingTime={essay.data.readingTime}
-                  publishDate={essay.data.publishDate}
-                  variant="editorial"
-                />
-              ))}
+    {recentEssays.length > 0 && (
+      <section class="content-section" id="essays">
+        <div class="section-wrap">
+          <div class="section-header">
+            <div class="section-header__left">
+              <span class="section-label">Essays</span>
+              <h2 class="section-title">Systems thinking</h2>
+              <p class="section-desc">
+                Long-form reasoning about how infrastructure works and why it
+                evolved the way it did.
+              </p>
             </div>
-          ) : (
-            <p class="empty-state">No essays published yet.</p>
-          )
-        }
-      </div>
-    </section>
+            <a href="/essays" class="section-viewall">View all →</a>
+          </div>
+
+          <div class="essays-list">
+            {recentEssays.map((essay) => (
+              <PostCard
+                title={essay.data.title}
+                description={essay.data.description}
+                href={`/essays/${essay.slug}`}
+                tags={essay.data.tags}
+                readingTime={essay.data.readingTime}
+                publishDate={essay.data.publishDate}
+                variant="editorial"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
 
     <!-- ─────────────────── Notes ─────────────────── -->
-    <section class="content-section" id="notes">
-      <div class="section-wrap">
-        <div class="section-header">
-          <div class="section-header__left">
-            <span class="section-label">Notes</span>
-            <h2 class="section-title">Quick references</h2>
-            <p class="section-desc">
-              Short technical notes, command references, and things worth
-              writing down.
-            </p>
-          </div>
-          <a href="/notes" class="section-viewall">View all →</a>
-        </div>
-
-        {
-          recentNotes.length > 0 ? (
-            <div class="notes-list">
-              {recentNotes.map((note) => (
-                <PostCard
-                  title={note.data.title}
-                  description={note.data.description}
-                  href={`/notes/${note.slug}`}
-                  tags={note.data.tags}
-                  readingTime={note.data.readingTime}
-                  publishDate={note.data.publishDate}
-                  variant="compact"
-                />
-              ))}
+    {recentNotes.length > 0 && (
+      <section class="content-section" id="notes">
+        <div class="section-wrap">
+          <div class="section-header">
+            <div class="section-header__left">
+              <span class="section-label">Notes</span>
+              <h2 class="section-title">Quick references</h2>
+              <p class="section-desc">
+                Short technical notes, command references, and things worth
+                writing down.
+              </p>
             </div>
-          ) : (
-            <p class="empty-state">No notes published yet.</p>
-          )
-        }
-      </div>
-    </section>
+            <a href="/notes" class="section-viewall">View all →</a>
+          </div>
+
+          <div class="notes-list">
+            {recentNotes.map((note) => (
+              <PostCard
+                title={note.data.title}
+                description={note.data.description}
+                href={`/notes/${note.slug}`}
+                tags={note.data.tags}
+                readingTime={note.data.readingTime}
+                publishDate={note.data.publishDate}
+                variant="compact"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
 
     <!-- ─────────────────── About teaser ─────────────────── -->
     <section class="content-section about-section" id="about">
@@ -391,31 +402,11 @@ const recentNotes = allNotes.sort(sortByDate).slice(0, 5);
     color: var(--accent-text);
   }
 
-  /* Topic chips */
-  .hero-topics {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
-  .topic-chip {
-    font-family: var(--font-mono);
-    font-size: 0.69rem;
-    color: var(--ink-dim);
-    border: 1px solid var(--border-solid);
-    border-radius: 3px;
-    padding: 0.2em 0.6em;
-    text-transform: lowercase;
-    letter-spacing: 0.02em;
-    transition:
-      color 0.15s ease,
-      border-color 0.15s ease,
-      background 0.15s ease;
-  }
-  .topic-chip:hover {
-    color: var(--accent-text);
-    border-color: rgba(74, 222, 128, 0.2);
-    background: var(--accent-bg);
+  /* ── Projects ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 1.25rem;
   }
 
   /* ── Content Sections ── */

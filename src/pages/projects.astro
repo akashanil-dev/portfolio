@@ -1,0 +1,76 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteNav from "@/components/site/SiteNav.astro";
+import SiteFooter from "@/components/site/SiteFooter.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import { projects } from "@/data/projects";
+---
+
+<BaseLayout
+  title="Projects — Akash A | akashanil.dev"
+  description="Things Akash A has built — Tuxplore, a Linux playground in the browser, and Faber, speaking practice for classrooms."
+>
+  <SiteNav />
+
+  <main class="page-main">
+    <div class="page-wrap">
+      <header class="page-header">
+        <span class="page-label">Projects</span>
+        <h1 class="page-title">Stuff I made</h1>
+        <p class="page-desc">
+          Things I built because I wanted them to exist. Click around —
+          they're live.
+        </p>
+      </header>
+
+      <div class="projects-grid">
+        {projects.map((project) => <ProjectCard project={project} />)}
+      </div>
+    </div>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .page-main {
+    padding: 4rem 0 5rem;
+  }
+  .page-wrap {
+    max-width: var(--max-w-wide);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  .page-header {
+    margin-bottom: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: var(--max-w);
+  }
+  .page-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent-text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .page-title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .page-desc {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    line-height: 1.65;
+    max-width: 52ch;
+  }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 1.25rem;
+  }
+</style>

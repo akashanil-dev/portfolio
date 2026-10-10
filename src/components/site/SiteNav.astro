@@ -1,10 +1,21 @@
 ---
+import { getCollection } from "astro:content";
+import { projects } from "@/data/projects";
+
+const [labs, essays, notes] = await Promise.all([
+  getCollection("labs", ({ data }) => !data.draft),
+  getCollection("essays", ({ data }) => !data.draft),
+  getCollection("notes", ({ data }) => !data.draft),
+]);
+
+// Only show sections that have published posts
 const navLinks = [
-  { href: "/labs", label: "Labs" },
-  { href: "/essays", label: "Essays" },
-  { href: "/notes", label: "Notes" },
-  { href: "/about", label: "About" },
-];
+  { href: "/projects", label: "Projects", count: projects.length },
+  { href: "/labs", label: "Labs", count: labs.length },
+  { href: "/essays", label: "Essays", count: essays.length },
+  { href: "/notes", label: "Notes", count: notes.length },
+  { href: "/about", label: "About", count: 1 },
+].filter((link) => link.count > 0);
 
 const currentPath = Astro.url.pathname;
 ---
