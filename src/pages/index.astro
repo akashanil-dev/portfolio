@@ -275,7 +275,7 @@ const sections = [
 
   .mono-label {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--ink-dim);
     letter-spacing: 0.03em;
   }
@@ -313,7 +313,7 @@ const sections = [
     line-height: 1.7;
     max-width: 52ch;
     margin-bottom: 0.85rem;
-    font-weight: 300;
+    font-weight: 400;
   }
 
   .hero-tagline {
@@ -322,7 +322,7 @@ const sections = [
     line-height: 1.75;
     max-width: 54ch;
     margin-bottom: 2.25rem;
-    font-weight: 300;
+    font-weight: 400;
     font-style: italic;
   }
 
@@ -393,9 +393,11 @@ const sections = [
 
   .hero-ext-link {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--ink-dim);
     letter-spacing: 0.01em;
+    display: inline-block;
+    padding: 0.4rem 0;
     transition: color 0.15s ease;
   }
   .hero-ext-link:hover {
@@ -405,7 +407,7 @@ const sections = [
   /* ── Projects ── */
   .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    grid-template-columns: 1fr;
     gap: 1.25rem;
   }
 
@@ -431,7 +433,7 @@ const sections = [
 
   .section-label {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.78rem;
     color: var(--accent-text);
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -455,7 +457,7 @@ const sections = [
 
   .section-viewall {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--ink-dim);
     white-space: nowrap;
     padding-top: 0.35rem;
@@ -506,10 +508,12 @@ const sections = [
 
   .about-link {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--ink-dim);
     transition: color 0.15s ease;
-    margin-top: 0.25rem;
+    display: inline-block;
+    padding: 0.4rem 0;
+    margin-top: 0.05rem;
   }
   .about-link:hover {
     color: var(--accent-text);

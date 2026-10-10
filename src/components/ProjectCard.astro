@@ -83,7 +83,7 @@ const host = new URL(project.url).host;
   .project-url {
     margin-left: 0.5rem;
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.78rem;
     color: var(--ink-dim);
     background: var(--bg);
     border-radius: 4px;
@@ -111,7 +111,7 @@ const host = new URL(project.url).host;
 
   .project-tagline {
     font-family: var(--font-mono);
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     color: var(--accent-text);
     margin-bottom: 0.85rem;
   }
@@ -140,7 +140,7 @@ const host = new URL(project.url).host;
 
   .project-tag {
     font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     color: var(--ink-dim);
     border: 1px solid var(--border-solid);
     border-radius: 3px;
@@ -149,13 +149,30 @@ const host = new URL(project.url).host;
 
   .project-visit {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--ink-dim);
     transition: color 0.15s ease;
   }
 
   .project-card:hover .project-visit {
     color: var(--accent-text);
+  }
+
+  /* ── Light theme: cards sit lighter than the page, softer hover ── */
+  :global([data-theme="light"]) .project-card {
+    background: #fdfdfc;
+  }
+  :global([data-theme="light"]) .project-chrome {
+    background: var(--bg-elevated);
+  }
+  :global([data-theme="light"]) .project-url {
+    background: #fdfdfc;
+    border: 1px solid var(--border-solid);
+  }
+  :global([data-theme="light"]) .project-card:hover,
+  :global([data-theme="light"]) .project-card:focus-visible {
+    border-color: var(--accent);
+    box-shadow: 0 10px 28px -14px rgba(17, 24, 39, 0.18);
   }
 
   @media (prefers-reduced-motion: reduce) {

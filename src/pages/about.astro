@@ -163,7 +163,7 @@ import SiteFooter from "@/components/site/SiteFooter.astro";
 
   .about-label {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.78rem;
     color: var(--accent-text);
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -209,7 +209,7 @@ import SiteFooter from "@/components/site/SiteFooter.astro";
 
   .about-links__heading {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.78rem;
     color: var(--ink-subtle);
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -223,24 +223,34 @@ import SiteFooter from "@/components/site/SiteFooter.astro";
     gap: 0.75rem;
   }
 
-  .about-link {
-    display: flex;
+  .about-body .about-link {
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 1fr);
     align-items: baseline;
     gap: 1rem;
+    padding: 0.2rem 0;
+    text-decoration: none;
     transition: none;
   }
 
   .about-link__label {
     font-family: var(--font-mono);
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     color: var(--ink-subtle);
-    min-width: 56px;
   }
 
   .about-link__handle {
     font-size: 0.875rem;
     color: var(--ink-muted);
+    overflow-wrap: anywhere;
     transition: color 0.15s ease;
+  }
+
+  @media (max-width: 480px) {
+    .about-body .about-link {
+      grid-template-columns: 1fr;
+      gap: 0.1rem;
+    }
   }
   .about-link:hover .about-link__handle {
     color: var(--accent-text);
@@ -261,7 +271,7 @@ import SiteFooter from "@/components/site/SiteFooter.astro";
   /* Shared heading style for Currently / This site / Site stack */
   .about-section-heading {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.78rem;
     color: var(--ink-subtle);
     text-transform: uppercase;
     letter-spacing: 0.08em;

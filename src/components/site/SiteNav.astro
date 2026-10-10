@@ -346,7 +346,14 @@ const currentPath = Astro.url.pathname;
   }
 
   @media (max-width: 640px) {
+    /* Keep the theme toggle on phones; links move into the drawer */
+    .header-inner {
+      gap: 0.5rem;
+    }
     .site-nav {
+      margin-left: auto;
+    }
+    .site-nav .nav-link {
       display: none;
     }
     .mobile-menu-btn {
