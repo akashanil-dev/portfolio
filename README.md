@@ -1,61 +1,78 @@
-# Portfolio
-![Deploy Status](https://img.shields.io/badge/Deploy-Vercel-black?style=flat&logo=vercel)
+# akashanil.dev
 
+My personal site — live at **[akashanil.dev](https://akashanil.dev)**.
+
+![Astro](https://img.shields.io/badge/Astro-FF5D01?logo=astro&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)
+
+## What's on it
+
+- **Projects** — things I've built, like [Tuxplore](https://tuxplore.akashanil.dev) and [Faber](https://faber.akashanil.dev)
+- **Labs / Essays / Notes** — writing, once there is some
+- **About** — who I am and where to find me
+
+Sections only show up when they have something in them, so an empty collection is hidden from the nav and the homepage until a post is added.
+
+## Running locally
+
+```sh
+git clone https://github.com/akashanil-dev/portfolio
+cd portfolio
+npm install
+npm run dev        # http://localhost:4321
+```
+
+`npm run build` type-checks with `astro check`, then builds the static site into `dist/`.
+
+## Adding things
+
+**A project** — add an entry to `src/data/projects.ts`:
+
+```ts
+{
+  name: "Thing",
+  url: "https://thing.akashanil.dev",
+  tagline: "One line about it.",
+  blurb: "A couple of sentences on what it does.",
+  tags: ["web app"],
+}
+```
+
+**A post** — drop a Markdown file into `src/content/labs/`, `essays/` or `notes/`:
+
+```md
+---
+title: "Post title"
+description: "Short summary"
+publishDate: 2026-10-10
+tags: ["linux"]
+readingTime: "4 min read"   # optional
+featured: false             # optional
+draft: false                # optional, true hides it
 ---
 
-[Demo](https://oscarhernandez.vercel.app/)
-
-[Astro Themes](https://astro.build/themes/details/dark-minimal/)
-
-[ReactBits Showcase](https://www.reactbits.dev/showcase) 
-
-The component `<LetterGlitch \>` was taken from [ReactBits.dev](https://www.reactbits.dev/)
-
-## **Stack**  
-### **Frontend**  
-![Astro](https://img.shields.io/badge/Astro-FF5D01?logo=astro&logoColor=white)
-![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
-
-### **Tools**  
-![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=white)
-![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black)
-![Canva](https://img.shields.io/badge/Canva-c900c3?logo=canva&logoColor=white)
-
-### **Show your favorite Spotify album (or your own)** ![Spotify](https://img.shields.io/badge/Spotify-06cc1a?logo=spotify&logoColor=white)
-1. Choose your Spotify album
-2. Access the share options
-3. Select 'copy embed code'
+Post body here.
 ```
-<iframe src="https://open.spotify.com/embed/album/ALBUM_ID" style="border-radius:12px border:0;" class="w-full h-40" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
-```
-4. Insert the embed code on footer.astro
 
-That's it!
+The schema lives in `src/content/config.ts`.
 
-## **Project structure**
+## Project structure
+
 ```
-public/
-└── svg/
 src/
-├── Components/
-├── layouts/
-├── React/
-└── pages/
+├── components/   # cards, nav, footer
+├── content/      # labs, essays, notes (Markdown)
+├── data/         # projects.ts
+├── layouts/      # BaseLayout (theme tokens), PostLayout
+└── pages/        # routes, RSS feed, tag pages
+public/           # static assets
 ```
 
-## **Local configuration** 
-1. Clone the repo:  
-```
-git clone https://github.com/gothsec/portfolio
-```
-2. Install dependencies:
-```  
-npm install
-```
-3. Start the development server:
-```  
-npm run dev
-```
+## Deployment
 
-Portfolio template by Oscar Hernandez, licensed under the MIT License.
+Hosted on Vercel. Every push to `main` deploys to production, and other branches get preview deployments. The old version of the site lives on the `v1` branch.
+
+## Credits
+
+Originally based on a portfolio template by Oscar Hernandez (MIT, see [LICENSE](LICENSE)).
