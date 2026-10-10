@@ -11,14 +11,6 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    name: "Tuxplore",
-    url: "https://tuxplore.akashanil.dev",
-    tagline: "Learn Linux by playing in your browser.",
-    blurb:
-      "Boots a pretend Linux machine called TuxOS right in the tab. Ten terminal quests, plus KDE, GNOME, CDE and Hyprland to poke around in — no install, and no way to break your actual laptop.",
-    tags: ["linux", "browser", "game"],
-  },
-  {
     name: "Faber",
     url: "https://faber.akashanil.dev",
     tagline: "Speaking practice for college classrooms.",

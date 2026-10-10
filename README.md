@@ -8,7 +8,7 @@ My personal site — live at **[akashanil.dev](https://akashanil.dev)**.
 
 ## What's on it
 
-- **Projects** — things I've built, like [Tuxplore](https://tuxplore.akashanil.dev) and [Faber](https://faber.akashanil.dev)
+- **Projects** — things I've built, like [Faber](https://faber.akashanil.dev)
 - **Labs / Essays / Notes** — writing, once there is some
 - **About** — who I am and where to find me
 
