@@ -2,6 +2,15 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteNav from "@/components/site/SiteNav.astro";
 import SiteFooter from "@/components/site/SiteFooter.astro";
+import { getCollection } from "astro:content";
+
+// "This site" section only makes sense once something is published
+const [labs, essays, notes] = await Promise.all([
+  getCollection("labs", ({ data }) => !data.draft),
+  getCollection("essays", ({ data }) => !data.draft),
+  getCollection("notes", ({ data }) => !data.draft),
+]);
+const hasPosts = labs.length + essays.length + notes.length > 0;
 ---
 
 <BaseLayout
@@ -56,19 +65,23 @@ import SiteFooter from "@/components/site/SiteFooter.astro";
 
         <hr class="about-divider" />
 
-        <div class="about-structure">
-          <h2 class="about-section-heading">This site</h2>
-          <p>
-            The content is organized into three distinct types:
-          </p>
-          <ul class="about-structure__list">
-            <li><strong>Labs</strong> — hands-on build logs from things I've set up myself.</li>
-            <li><strong>Essays</strong> — long-form systems thinking. Why things work the way they do.</li>
-            <li><strong>Notes</strong> — short references, cheatsheets, and things worth writing down.</li>
-          </ul>
-        </div>
+        {hasPosts && (
+          <>
+            <div class="about-structure">
+              <h2 class="about-section-heading">This site</h2>
+              <p>
+                The content is organized into three distinct types:
+              </p>
+              <ul class="about-structure__list">
+                <li><strong>Labs</strong> — hands-on build logs from things I've set up myself.</li>
+                <li><strong>Essays</strong> — long-form systems thinking. Why things work the way they do.</li>
+                <li><strong>Notes</strong> — short references, cheatsheets, and things worth writing down.</li>
+              </ul>
+            </div>
 
-        <hr class="about-divider" />
+            <hr class="about-divider" />
+          </>
+        )}
 
         <div class="about-links">
           <h2 class="about-links__heading">Links</h2>
